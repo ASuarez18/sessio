@@ -1,0 +1,12 @@
+schema: "classroom50/repo-config/v1"
+classroom: "m1-0126-wd301"
+assignment: "wd-301-event-management-mongodb-final-project"
+owner:
+  username: "ASuarez18"
+  id: 72723432
+  accepted_at: "2026-09-12T03:12:48Z"
+source:
+  owner: "Cornerstone-CICCC"
+  owner_id: 113148113
+  repo: "wd-301-mongo-final-project"
+  branch: "main"
