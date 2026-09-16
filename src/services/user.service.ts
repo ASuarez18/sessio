@@ -60,3 +60,26 @@ export async function createAdminUser(userData: { name: string; email: string; u
         throw new Error("Failed to create admin user in database");
     }
 }
+
+/**
+ * Updates an existing user by ID in the database
+ * @param {string} userId - The ID of the user to update
+ * @param {Object} updateData - The fields to update
+ * @returns {Promise<Object|null>} The updated user object (excluding password hash)
+ */
+export async function updateUser(userId: string, updateData: Partial<{ name: string; email: string; username: string; role: string }>) {
+    try {
+        await connectDB();
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: updateData },
+            { new: true, runValidators: true }
+        ).select("-passHash").lean();
+
+        return updatedUser;
+    } catch (error) {
+        console.error("Error updating user:", error);
+        throw new Error("Failed to update user in database");
+    }
+}
