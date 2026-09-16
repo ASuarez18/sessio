@@ -35,3 +35,28 @@ export async function getAdminUsers() {
         throw new Error("Failed to fetch admin users from database");
     }
 }
+
+/**
+ * Creates a new admin user in the database
+ * @param {Object} userData - The user data object containing name, email, username, and passHash
+ * @returns {Promise<Object>} The created admin user object (excluding password hash)
+ */
+export async function createAdminUser(userData: { name: string; email: string; username: string; passHash: string }) {
+    try {
+        await connectDB();
+
+        const newAdmin = await User.create({
+            ...userData,
+            role: "admin", // Force the role to be admin
+        });
+
+        // Convert Mongoose document to plain object and exclude passHash
+        const { passHash, ...adminResponse } = newAdmin.toObject();
+
+        return adminResponse;
+    } catch (error) {
+        console.error("Error creating admin user:", error);
+
+        throw new Error("Failed to create admin user in database");
+    }
+}

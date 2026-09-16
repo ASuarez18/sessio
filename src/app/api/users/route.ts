@@ -1,6 +1,6 @@
 // app/api/users/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllUsers, getAdminUsers } from '../../../services/user.service';
+import { getAllUsers, getAdminUsers, createAdminUser } from '../../../services/user.service';
 
 /**
  * GET handler for /api/users
@@ -26,6 +26,28 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json(
       { error: 'Failed to retrieve users' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * POST handler for /api/users
+ * Creates a new admin user.
+ */
+export async function POST(request: NextRequest) {
+  try {
+    // TODO: The auth team will add the admin role verification here later.
+
+    const body = await request.json();
+    const newAdmin = await createAdminUser(body);
+
+    return NextResponse.json(newAdmin, { status: 201 });
+  } catch (error) {
+    console.error('API Error in POST /api/users:', error);
+    
+    return NextResponse.json(
+      { error: 'Failed to create admin user' },
       { status: 500 }
     );
   }
