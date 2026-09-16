@@ -83,3 +83,21 @@ export async function updateUser(userId: string, updateData: Partial<{ name: str
         throw new Error("Failed to update user in database");
     }
 }
+
+/**
+ * Deletes a user by ID from the database
+ * @param {string} userId - The ID of the user to delete
+ * @returns {Promise<Object|null>} The deleted user object
+ */
+export async function deleteUser(userId: string) {
+    try {
+        await connectDB();
+
+        const deletedUser = await User.findByIdAndDelete(userId).select("-passHash").lean();
+
+        return deletedUser;
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        throw new Error("Failed to delete user from database");
+    }
+}
