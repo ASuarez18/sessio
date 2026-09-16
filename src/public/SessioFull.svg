@@ -1,0 +1,50 @@
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Estilo para la tipografía Outfit si no está instalada localmente -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700&amp;display=swap');
+      .brand-text {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        fill: #F7EEF7;
+        letter-spacing: -1px;
+      }
+    </style>
+
+    <!-- Gradiente Principal -->
+    <linearGradient id="sessio-gradient-full" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E01F5F" />
+      <stop offset="60%" stop-color="#AD52AA" />
+      <stop offset="100%" stop-color="#F4A60B" />
+    </linearGradient>
+
+    <!-- Fondo del Ícono -->
+    <linearGradient id="sessio-bg-full" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#180B18" />
+      <stop offset="100%" stop-color="#0E050E" />
+    </linearGradient>
+  </defs>
+
+  <!-- ISOTIPO (Izquierda) -->
+  <g transform="translate(10, 10)">
+    <!-- Contenedor -->
+    <rect width="80" height="80" rx="20" fill="url(#sessio-bg-full)" stroke="#452144" stroke-width="1.5"/>
+
+    <!-- Trazos S -->
+    <path d="M 48 24 C 56 24 60 29 60 35 C 60 42 51 45 40 48 C 29 50 20 53 20 60 C 20 66 24 71 31 71" 
+          stroke="url(#sessio-gradient-full)" stroke-width="7.5" stroke-linecap="round" fill="none"/>
+          
+    <path d="M 31 56 C 24 56 20 51 20 45 C 20 38 29 35 40 33 C 51 30 60 28 60 20 C 60 14 56 9 48 9" 
+          stroke="url(#sessio-gradient-full)" stroke-width="7.5" stroke-linecap="round" stroke-opacity="0.35" fill="none"/>
+
+    <!-- Destello -->
+    <circle cx="54" cy="18" r="3.5" fill="#F4A60B" />
+  </g>
+
+  <!-- TEXTO (Derecha) -->
+  <text x="110" y="66" class="brand-text">Sessio</text>
+
+  <!-- Punto final acentuado en Raspberry Red -->
+  <circle cx="262" cy="61" r="5" fill="#E01F5F" />
+</svg>
