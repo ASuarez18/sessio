@@ -1,0 +1,29 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradiente Principal: Raspberry Red -> Midnight Violet -> Papaya Whip -->
+    <linearGradient id="sessio-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E01F5F" />
+      <stop offset="60%" stop-color="#AD52AA" />
+      <stop offset="100%" stop-color="#F4A60B" />
+    </linearGradient>
+
+    <!-- Fondo Oscuro Midnight Violet 950 -->
+    <linearGradient id="sessio-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#180B18" />
+      <stop offset="100%" stop-color="#0E050E" />
+    </linearGradient>
+  </defs>
+
+  <!-- Contenedor / Marco con bordes redondeados -->
+  <rect width="128" height="128" rx="32" fill="url(#sessio-bg)" stroke="#452144" stroke-width="2"/>
+
+  <!-- Símbolo "S" Estilizada / Doble Bucle -->
+  <path d="M 78 38 C 90 38 96 46 96 56 C 96 68 82 72 64 76 C 46 80 32 84 32 96 C 32 106 38 114 50 114" 
+        stroke="url(#sessio-gradient)" stroke-width="12" stroke-linecap="round" fill="none"/>
+        
+  <path d="M 50 90 C 38 90 32 82 32 72 C 32 60 46 56 64 52 C 82 48 96 44 96 32 C 96 22 90 14 78 14" 
+        stroke="url(#sessio-gradient)" stroke-width="12" stroke-linecap="round" stroke-opacity="0.35" fill="none"/>
+
+  <!-- Destello / Acento Papaya Whip -->
+  <circle cx="86" cy="28" r="5" fill="#F4A60B" />
+</svg>

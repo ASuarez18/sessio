@@ -5,6 +5,7 @@ export type UserRole = "user" | "admin";
 export interface IUser {
 	name: string;
 	email: string;
+  username?: string;
 	passHash: string;
 	role: UserRole;
 	createdAt: Date;
@@ -24,6 +25,14 @@ const userSchema = new Schema<UserDocument>(
 			trim: true,
 			match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 		},
+    username: {
+      type: String,
+      trim: true,
+      minlength: 3,
+      maxlength: 20,
+      unique: true,
+      sparse: true,
+    },
 		passHash: { type: String, required: true, select: false },
 		role: { type: String, enum: ["user", "admin"], default: "user", required: true },
 	},
@@ -33,3 +42,5 @@ const userSchema = new Schema<UserDocument>(
 export const User: Model<UserDocument> =
 	(mongoose.models.User as Model<UserDocument> | undefined) ??
 	mongoose.model<UserDocument>("User", userSchema);
+
+export default User;
