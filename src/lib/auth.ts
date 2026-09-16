@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
-import { getUserFromSession } from "../services/auth.service";
+import { getUserFromSession } from "@/services/auth.service";
 
-export const SESSION_COOKIE_NAME = "eventhub_session";
+export const SESSION_COOKIE_NAME = "sessio_session";
 
 export const SESSION_COOKIE_OPTIONS = {
 	httpOnly: true,

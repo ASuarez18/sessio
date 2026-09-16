@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
 import mongoose from "mongoose";
-import { connectDB } from "../lib/mongodb";
-import { Session } from "../models/Session";
-import { IUser, User } from "../models/User";
+import { connectDB } from "@/lib/mongodb";
+import { Session } from "@/models/Session";
+import { IUser, User } from "@/models/User";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 

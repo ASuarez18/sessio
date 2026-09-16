@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { authenticateUser } from "../../../../services/auth.service";
-import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "../../../../lib/auth";
+import { authenticateUser } from "@/services/auth.service";
+import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "@/lib/auth";
 
 const loginSchema = z.object({
 	email: z.string().email(),

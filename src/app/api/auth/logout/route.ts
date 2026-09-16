@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { destroySession } from "../../../../services/auth.service";
-import { SESSION_COOKIE_NAME } from "../../../../lib/auth";
+import { destroySession } from "@/services/auth.service";
+import { SESSION_COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(): Promise<NextResponse> {
 	const cookieStore = await cookies();

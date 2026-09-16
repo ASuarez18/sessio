@@ -1,15 +1,16 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
-}
+} */
 
 @theme inline {
   /* Fonts */
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
   /* Colors */
   --color-midnight-violet-50: #f7eef7;
   --color-midnight-violet-100: #efdcee;
@@ -70,9 +71,6 @@
   --color-papaya-whip-800: #614205;
   --color-papaya-whip-900: #312102;
   --color-papaya-whip-950: #221702;
-
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,5 +83,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
