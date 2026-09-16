@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   getEventById,
   updateEvent,
-} from "@/services/event.service";
-import Event from "@/models/Event";
-import { connectDB } from "@/lib/mongodb";
+} from "../../../../services/event.service";
+import Event from "../../../../models/Event";
+import { connectDB } from "../../../../lib/mongodb";
 import mongoose from "mongoose";
-// import { requireAdmin } from "@/lib/permissions"; // AUTH
-// import { getCurrentUser } from "@/lib/auth"; // AUTH
+// import { requireAdmin } from "../../../../lib/permissions"; // AUTH
+// import { getCurrentUser } from "../../../../lib/auth"; // AUTH
 
 interface RouteParams {
   params: Promise<{ id: string }>;

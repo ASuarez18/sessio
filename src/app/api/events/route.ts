@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse,  } from "next/server";
-import { getEvents, createEvent } from "@/services/event.service";
-// import { requireAdmin } from "@/lib/permissions"; // AUTH
+import { getEvents, createEvent } from "../../../services/event.service";
+// import { requireAdmin } from "../../../lib/permissions"; // AUTH
 
 /**
  * @GET /api/events

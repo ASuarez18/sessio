@@ -1,6 +1,6 @@
-import { connectDB } from "@/lib/mongodb";
-import Event, { IEvent } from "@/models/Event";
-import Registration from "@/models/Registration";
+import { connectDB } from "../lib/mongodb";
+import Event, { IEvent } from "../models/Event";
+import Registration from "../models/Registration";
 import mongoose from "mongoose";
 
 export interface EventDetailResponse {
