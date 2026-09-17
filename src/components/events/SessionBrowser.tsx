@@ -7,8 +7,8 @@ import {
   type Session,
   type SessionCategory,
 } from "@/lib/mock-data";
+import { Search } from "lucide-react";
 import { SessionCard } from "../SessionCard";
-import { SearchIcon } from "../ui/icons";
 
 type CategoryFilter = "All" | SessionCategory;
 
@@ -36,7 +36,7 @@ export function SessionBrowser(): React.ReactNode {
     <>
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="relative flex-1">
-          <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-midnight-violet-400" />
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-midnight-violet-400" />
           <input
             type="search"
             value={query}

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import type { Session } from "@/lib/mock-data";
+import { Calendar, MapPin, Users } from "lucide-react";
 import { Badge } from "./ui/Badge";
 import { Button } from "./ui/Button";
-import { CalendarIcon, LocationIcon, UsersIcon } from "./ui/icons";
 
 interface SessionCardProps {
   session: Session;
@@ -42,13 +42,13 @@ export function SessionCard({
 
         <div className="flex flex-col gap-2 text-sm text-midnight-violet-600">
           <span className="flex items-center gap-2">
-            <CalendarIcon className="h-4 w-4 text-midnight-violet-400" />
+            <Calendar className="h-4 w-4 text-midnight-violet-400" />
             {showTime && session.time
               ? `${session.date} · ${session.time}`
               : session.date}
           </span>
           <span className="flex items-center gap-2">
-            <LocationIcon className="h-4 w-4 text-midnight-violet-400" />
+            <MapPin className="h-4 w-4 text-midnight-violet-400" />
             {session.location}
           </span>
           <span
@@ -56,7 +56,7 @@ export function SessionCard({
               isFull ? "text-raspberry-red-600" : "text-green-600"
             }`}
           >
-            <UsersIcon className="h-4 w-4" />
+            <Users className="h-4 w-4" />
             {isFull ? "Full" : `${session.spotsLeft} spots left`}
           </span>
         </div>

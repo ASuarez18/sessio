@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronDownIcon, UserIcon } from "./ui/icons";
+import { ChevronDown, User } from "lucide-react";
 
 type NavKey = "home" | "events" | "about";
 
@@ -50,9 +50,9 @@ export function Header({ active }: HeaderProps): React.ReactNode {
           href="/login"
           className="inline-flex items-center gap-2 rounded-full border border-midnight-violet-200 px-4 py-2 text-sm font-medium text-midnight-violet-800 hover:bg-midnight-violet-50"
         >
-          <UserIcon className="h-4 w-4 text-midnight-violet-500" />
+          <User className="h-4 w-4 text-midnight-violet-500" />
           Sign In
-          <ChevronDownIcon className="h-4 w-4 text-midnight-violet-500" />
+          <ChevronDown className="h-4 w-4 text-midnight-violet-500" />
         </Link>
       </div>
     </header>
