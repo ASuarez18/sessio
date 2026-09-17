@@ -19,7 +19,7 @@ export default function AdminLayout({
 						href="/admin"
 						className="font-heading text-lg font-bold text-purple-200 hover:text-white transition-colors"
 					>
-						EventHub
+						Sessio
 					</Link>
 					<p className="text-xs text-purple-400 mt-0.5 uppercase tracking-wide font-semibold">
 						Admin
