@@ -7,7 +7,7 @@ import {
   type Session,
   type SessionCategory,
 } from "@/lib/mock-data";
-import { Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { SessionCard } from "../common/SessionCard";
 
 type CategoryFilter = "All" | SessionCategory;
@@ -47,20 +47,23 @@ export function SessionBrowser(): React.ReactNode {
             className="w-full rounded-xl border border-midnight-violet-200 bg-white py-3 pl-12 pr-4 text-midnight-violet-800 placeholder:text-midnight-violet-400 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
           />
         </div>
-        <select
-          value={category}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-            setCategory(event.target.value as CategoryFilter)
-          }
-          className="rounded-xl border border-midnight-violet-200 bg-white px-4 py-3 text-midnight-violet-800 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
-        >
-          <option value="All">All categories</option>
-          {CATEGORY_FILTERS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={category}
+            onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+              setCategory(event.target.value as CategoryFilter)
+            }
+            className="w-full appearance-none rounded-xl border border-midnight-violet-200 bg-white px-4 py-3 pr-10 text-midnight-violet-800 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
+          >
+            <option value="All">All categories</option>
+            {CATEGORY_FILTERS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-midnight-violet-500" />
+        </div>
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">
