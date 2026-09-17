@@ -16,7 +16,7 @@ export function SessionCard({
   const isFull = session.spotsLeft <= 0;
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-2xl border border-midnight-violet-100 bg-white">
+    <article className="flex flex-col overflow-hidden rounded-xl border border-midnight-violet-100 bg-white">
       <div className="relative aspect-[4/3]">
         <Image
           src={session.imageUrl}

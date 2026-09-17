@@ -48,7 +48,7 @@ export function Header({ active }: HeaderProps): React.ReactNode {
 
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 rounded-2xl border border-midnight-violet-200 px-4 py-2 text-sm font-medium text-midnight-violet-800 hover:bg-midnight-violet-50"
+          className="inline-flex items-center gap-2 rounded-xl border border-midnight-violet-200 px-4 py-2 text-sm font-medium text-midnight-violet-800 hover:bg-midnight-violet-50"
         >
           <User className="h-4 w-4 text-midnight-violet-500" />
           Sign In
