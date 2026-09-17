@@ -44,7 +44,7 @@ export function SessionBrowser(): React.ReactNode {
               setQuery(event.target.value)
             }
             placeholder="Search sessions, instructors..."
-            className="w-full rounded-full border border-midnight-violet-200 bg-white py-3 pl-12 pr-4 text-midnight-violet-800 placeholder:text-midnight-violet-400 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
+            className="w-full rounded-2xl border border-midnight-violet-200 bg-white py-3 pl-12 pr-4 text-midnight-violet-800 placeholder:text-midnight-violet-400 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
           />
         </div>
         <select
@@ -52,7 +52,7 @@ export function SessionBrowser(): React.ReactNode {
           onChange={(event: ChangeEvent<HTMLSelectElement>) =>
             setCategory(event.target.value as CategoryFilter)
           }
-          className="rounded-full border border-midnight-violet-200 bg-white px-4 py-3 text-midnight-violet-800 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
+          className="rounded-2xl border border-midnight-violet-200 bg-white px-4 py-3 text-midnight-violet-800 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
         >
           <option value="All">All categories</option>
           {CATEGORY_FILTERS.map((option) => (
