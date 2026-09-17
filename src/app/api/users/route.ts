@@ -1,6 +1,7 @@
 // app/api/users/route.ts
 import { NextResponse } from 'next/server';
 import { getAllUsers } from '../../../services/user.service';
+import { getCurrentUser } from '../../../lib/auth';
 
 /**
  * GET handler for /api/users
@@ -8,7 +9,21 @@ import { getAllUsers } from '../../../services/user.service';
  */
 export async function GET() {
   try {
-    // TODO: The auth team will add the admin role verification here later.
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    if (currentUser.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
 
     const users = await getAllUsers();
 

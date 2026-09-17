@@ -1,27 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 @import "tailwindcss";
 
-:root {
-	--background: #ffffff;
-	--foreground: #171717;
-}
+/* :root {
+  --background: #ffffff;
+  --foreground: #171717;
+} */
 
 @theme inline {
-	/* Fonts */
-	--font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-	--font-heading: "Outfit", ui-sans-serif, system-ui, sans-serif;
-	/* Colors */
-	--color-midnight-violet-50: #f7eef7;
-	--color-midnight-violet-100: #efdcee;
-	--color-midnight-violet-200: #debadd;
-	--color-midnight-violet-300: #ce97cc;
-	--color-midnight-violet-400: #be74bb;
-	--color-midnight-violet-500: #ad52aa;
-	--color-midnight-violet-600: #8b4188;
-	--color-midnight-violet-700: #683166;
-	--color-midnight-violet-800: #452144;
-	--color-midnight-violet-900: #231022;
-	--color-midnight-violet-950: #180b18;
+  /* Fonts */
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
+  /* Colors */
+  --color-midnight-violet-50: #f7eef7;
+  --color-midnight-violet-100: #efdcee;
+  --color-midnight-violet-200: #debadd;
+  --color-midnight-violet-300: #ce97cc;
+  --color-midnight-violet-400: #be74bb;
+  --color-midnight-violet-500: #ad52aa;
+  --color-midnight-violet-600: #8b4188;
+  --color-midnight-violet-700: #683166;
+  --color-midnight-violet-800: #452144;
+  --color-midnight-violet-900: #231022;
+  --color-midnight-violet-950: #180b18;
 
 	--color-raspberry-red-50: #fce9ef;
 	--color-raspberry-red-100: #f9d2df;
@@ -59,20 +60,17 @@
 	--color-ash-grey-900: #151e1c;
 	--color-ash-grey-950: #0e1513;
 
-	--color-papaya-whip-50: #fef6e7;
-	--color-papaya-whip-100: #fdedce;
-	--color-papaya-whip-200: #fadb9e;
-	--color-papaya-whip-300: #f8ca6d;
-	--color-papaya-whip-400: #f6b83c;
-	--color-papaya-whip-500: #f4a60b;
-	--color-papaya-whip-600: #c38509;
-	--color-papaya-whip-700: #926407;
-	--color-papaya-whip-800: #614205;
-	--color-papaya-whip-900: #312102;
-	--color-papaya-whip-950: #221702;
-
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
+  --color-papaya-whip-50: #fef6e7;
+  --color-papaya-whip-100: #fdedce;
+  --color-papaya-whip-200: #fadb9e;
+  --color-papaya-whip-300: #f8ca6d;
+  --color-papaya-whip-400: #f6b83c;
+  --color-papaya-whip-500: #f4a60b;
+  --color-papaya-whip-600: #c38509;
+  --color-papaya-whip-700: #926407;
+  --color-papaya-whip-800: #614205;
+  --color-papaya-whip-900: #312102;
+  --color-papaya-whip-950: #221702;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,7 +81,7 @@
 }
 
 body {
-	background: var(--background);
-	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
 }
