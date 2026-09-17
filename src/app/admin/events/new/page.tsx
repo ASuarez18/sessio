@@ -69,9 +69,9 @@ export default function CreateEventPage() {
 				throw new Error(errorData.error || "Failed to create event");
 			}
 
-			// Redirect to the admin dashboard on success
+			
 			router.push("/admin");
-			router.refresh(); // Force refresh to show the newly created event
+			router.refresh();
 		} catch (err: any) {
 			console.error("Submission error:", err);
 			setError(err.message);
@@ -296,7 +296,6 @@ export default function CreateEventPage() {
 
 						<div className="rounded-xl bg-gray-100 aspect-video mb-4 flex items-center justify-center overflow-hidden">
 							{formData.imageUrl ? (
-								// eslint-disable-next-line @next/next/no-img-element
 								<img
 									src={formData.imageUrl}
 									alt="Event preview"
