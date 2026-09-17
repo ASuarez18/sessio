@@ -1,11 +1,3 @@
-/**
- * Static dummy data for the public pages (Home, Events, About).
- *
- * This is UI-only placeholder content. It is intentionally decoupled from the
- * Mongoose models so the UI work does not depend on schema/backend changes.
- * Real data wiring (category field, DB fetch) will come in later PRs.
- */
-
 export type SessionCategory =
   | "Development"
   | "Design"
@@ -17,12 +9,9 @@ export interface Session {
   id: string;
   title: string;
   category: SessionCategory;
-  /** Display-ready date, e.g. "Oct 5, 2026". */
   date: string;
-  /** Display-ready time range, e.g. "9:00 AM–1:00 PM". Optional. */
   time?: string;
   location: string;
-  /** Remaining spots. 0 means the session is full. */
   spotsLeft: number;
   imageUrl: string;
 }
@@ -106,10 +95,8 @@ export const SESSIONS: Session[] = [
   },
 ];
 
-/** Featured sessions shown on the Home page (first three). */
 export const FEATURED_SESSIONS: Session[] = SESSIONS.slice(0, 3);
 
-/** Category tiles shown in the Home hero. */
 export const CATEGORY_HIGHLIGHTS: CategoryHighlight[] = [
   { category: "Development", count: 1 },
   { category: "Design", count: 1 },
@@ -117,7 +104,6 @@ export const CATEGORY_HIGHLIGHTS: CategoryHighlight[] = [
   { category: "Leadership", count: 1 },
 ];
 
-/** Category filter options on the Events page. */
 export const CATEGORY_FILTERS: SessionCategory[] = [
   "Development",
   "Design",
