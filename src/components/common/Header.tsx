@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { User, LogOut, ShieldAlert } from "lucide-react";
 import Image from "next/image";
 import logo from "@/public/sessio-logo.svg";
-import brand from "@/public/sessio-full.svg";
+// import brand from "@/public/sessio-full.svg";
 
 interface PublicUser {
   id: string;
