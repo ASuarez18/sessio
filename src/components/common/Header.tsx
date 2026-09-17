@@ -37,8 +37,8 @@ export function Header({ active }: HeaderProps): React.ReactNode {
               href={item.href}
               className={
                 item.key === active
-                  ? "font-medium text-midnight-violet-700 underline decoration-2 underline-offset-8"
-                  : "font-medium text-midnight-violet-900 hover:text-midnight-violet-700"
+                  ? "font-bold text-midnight-violet-700 underline decoration-2 underline-offset-8"
+                  : "font-bold text-midnight-violet-900 hover:text-midnight-violet-700"
               }
             >
               {item.label}
