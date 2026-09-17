@@ -79,16 +79,6 @@ export function AuthForm(): React.ReactNode {
 
   return (
     <main className="min-h-screen bg-[#f8eff8] text-[#241426]">
-      <header className="sticky top-0 z-50 grid h-[68px] grid-cols-[1fr_auto_1fr] items-center border-b border-[#e5b5e0] bg-white px-[3.6vw] shadow-[0_1px_0_rgba(229,181,224,0.35)]">
-        <Link className="font-serif text-[25px] font-bold leading-none" href="/">Sessio</Link>
-        <nav className="hidden gap-[43px] font-bold sm:flex">
-          <Link href="/">Home</Link>
-          <Link href="/events">Events</Link>
-          <Link href="/about">About</Link>
-        </nav>
-        <span className="justify-self-end rounded-[11px] border border-[#e5b5e0] px-4 py-2 font-bold">♙ <span>Sign In</span>⌄</span>
-      </header>
-
       <section className="mx-auto max-w-[1160px] px-6 pb-20 pt-[60px]">
         <p className="mb-3 text-center text-sm tracking-[2px] text-[#b54eb4]">WELCOME</p>
         <h1 className="text-center font-serif text-[clamp(40px,5vw,48px)] font-bold leading-none">Join Sessio</h1>
