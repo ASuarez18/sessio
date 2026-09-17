@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 type BadgeTone = "light" | "dark";
 
@@ -16,11 +17,15 @@ interface BadgeProps {
 export function Badge({
   children,
   tone = "light",
-  className = "",
+  className,
 }: BadgeProps): React.ReactNode {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${TONE_CLASSES[tone]} ${className}`.trim()}
+      className={cn(
+        "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium",
+        TONE_CLASSES[tone],
+        className,
+      )}
     >
       {children}
     </span>
