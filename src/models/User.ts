@@ -1,59 +1,47 @@
-// models/User.ts
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Document, Model, Schema } from "mongoose";
 
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  username: string;
-  passHash: string;
-  role: 'user' | 'admin';
-  createdAt: Date;
-  updatedAt: Date;
+export type UserRole = "user" | "admin";
+
+export interface IUser {
+	name: string;
+	email: string;
+  username?: string;
+	passHash: string;
+	role: UserRole;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
+export type UserDocument = IUser & Document;
 
-const userSchema = new Schema<IUser>(
-  {
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-      trim: true,
-      maxlength: [50, 'Name cannot be more than 50 characters'],
-    },
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: true,
-      trim: true,
-      lowercase: true,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        'Please add a valid email',
-      ],
-    },
+const userSchema = new Schema<UserDocument>(
+	{
+		name: { type: String, required: true, trim: true, minlength: 2, maxlength: 80 },
+		email: {
+			type: String,
+			required: true,
+			unique: true,
+			lowercase: true,
+			trim: true,
+			match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+		},
     username: {
       type: String,
-      required: [true, 'Username is required'],
-      unique: true,
+			required: true,
       trim: true,
-      minlength: [3, 'Username must be at least 3 characters'],
-      maxlength: [20, 'Username cannot be more than 20 characters'],
+      minlength: 3,
+      maxlength: 20,
+      unique: true,
+      sparse: true,
     },
-    passHash: {
-      type: String,
-      required: [true, 'Password hash is required'],
-    },
-    role: {
-      type: String,
-      enum: ['user', 'admin'],
-      default: 'user'
-    },
-  },
-  {
-    timestamps: true, 
-  }
+		passHash: { type: String, required: true, select: false },
+		role: { type: String, enum: ["user", "admin"], default: "user", required: true },
+	},
+	{ timestamps: true },
 );
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
+export const User: Model<UserDocument> =
+	(mongoose.models.User as Model<UserDocument> | undefined) ??
+	mongoose.model<UserDocument>("User", userSchema);
 
 export default User;

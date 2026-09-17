@@ -1,6 +1,6 @@
 // app/api/users/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { getAllUsers, getAdminUsers, createAdminUser } from '../../../services/user.service';
+import { NextResponse } from 'next/server';
+import { getAllUsers } from '../../../services/user.service';
 
 /**
  * GET handler for /api/users
@@ -9,16 +9,8 @@ import { getAllUsers, getAdminUsers, createAdminUser } from '../../../services/u
 export async function GET(request: NextRequest) {
   try {
     // TODO: The auth team will add the admin role verification here later.
-    
-    const searchParams = request.nextUrl.searchParams;
-    const role = searchParams.get('role');
 
-    let users;
-    if (role === 'admin') {
-      users = await getAdminUsers();
-    } else {
-      users = await getAllUsers();
-    }
+    const users = await getAllUsers();
 
     return NextResponse.json(users, { status: 200 });
   } catch (error) {

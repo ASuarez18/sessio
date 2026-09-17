@@ -1,6 +1,5 @@
-// services/user.service.ts
-import { connectDB } from "../lib/mongodb";
-import User from "../models/User";
+import { connectDB } from "@/lib/mongodb";
+import User from "@/models/User";
 
 /**
  * Fetches all users
