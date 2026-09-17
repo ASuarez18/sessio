@@ -8,6 +8,15 @@ const loginSchema = z.object({
 	password: z.string().min(1),
 });
 
+// TODO: Implement login also by username in addition to email
+/**
+ * @function POST
+ * @param request 
+ * @desc Authenticates a user with the provided email and password, creates a session, and sets a session cookie
+ * @status 200 on success, 400 if input is invalid, 401 if authentication fails, 500 on server error
+ * @throws {Error} if there is a server error while authenticating the user
+ * @returns {user: PublicUser, token: string, expiresAt: Date} on success, or {error: string} on failure
+ */
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const input = loginSchema.safeParse(await request.json());

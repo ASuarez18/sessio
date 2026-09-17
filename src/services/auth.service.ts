@@ -28,19 +28,38 @@ function hashToken(token: string): string {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
 
-export async function registerUser(name: string, email: string, password: string): Promise<PublicUser> {
+/**
+ * @function registerUser
+ * @desc Registers a new user in the database after validating that the email is unique and hashing the password
+ * @param {string} name - name of the user to be registered 
+ * @param {string} email -  email of the user to be registered, must be unique
+ * @param {string} password -  password of the user to be registered, will be hashed before storing in the database
+ * @throws {Error} if an account with the provided email already exists
+ * @returns {PublicUser} - the newly created user object with public fields only
+ */
+export async function registerUser(name: string, email: string, password: string, username: string): Promise<PublicUser> {
   await connectDB();
   const normalizedEmail = email.trim().toLowerCase();
-  const existingUser = await User.findOne({ email: normalizedEmail }).exec();
-
-  if (existingUser) {
+  const normalizedUsername = username.trim().toLowerCase();
+  
+  const existingEmail = await User.findOne({ email: normalizedEmail }).exec();
+  if (existingEmail) {
     throw new Error("An account with this email already exists");
+  }
+
+  // Validar si el username ya existe
+  const existingUsername = await User.findOne({
+    username: normalizedUsername,
+  }).exec();
+  if (existingUsername) {
+    throw new Error("An account with this username already exists");
   }
 
   const passHash = await bcrypt.hash(password, 12);
   const user = await User.create({
     name: name.trim(),
     email: normalizedEmail,
+    username: normalizedUsername,
     passHash,
     role: "user",
   });
@@ -48,6 +67,14 @@ export async function registerUser(name: string, email: string, password: string
   return toPublicUser(user);
 }
 
+/**
+ * @function authenticateUser
+ * @desc Authenticates user credientials and creates a session for the user if the credentials are valid
+ * @param {user} email - email of the user to be authenticated, must match an existing user in the database 
+ * @param {user} password -  password of the user to be authenticated
+ * @throws {Error} if the email or password is invalid
+ * @returns {user: PublicUser, token: string, expiresAt: Date} - the authenticated user object with public fields only, session token, and expiration date
+ */
 export async function authenticateUser(email: string, password: string): Promise<AuthenticatedSession> {
   await connectDB();
   const user = await User.findOne({ email: email.trim().toLowerCase() }).select("+passHash").exec();
@@ -63,6 +90,13 @@ export async function authenticateUser(email: string, password: string): Promise
   return { user: toPublicUser(user), token, expiresAt };
 }
 
+/**
+ * @function getUserFromSession
+ * @desc Retrieves a user from the database based on a session token, if the session is valid and not expired
+ * @param {string} token - the session token to look up the user
+ * @throws {Error} if there is a server error while retrieving the user 
+ * @returns {Promise<User | null>} - the user object if found and valid, or null if not found or session is expired
+ */
 export async function getUserFromSession(token: string): Promise<PublicUser | null> {
   await connectDB();
   const session = await Session.findOne({
@@ -78,7 +112,35 @@ export async function getUserFromSession(token: string): Promise<PublicUser | nu
   return user ? toPublicUser(user) : null;
 }
 
+/**
+ * @function destroySession
+ * @desc Deletes a session from the database based on the provided session token
+ * @param {string} token - the session token to be destroyed 
+ * @throws {Error} if there is a server error while destroying the session
+ * @returns {Promise<void>} - resolves when the session is successfully destroyed
+ */
 export async function destroySession(token: string): Promise<void> {
   await connectDB();
   await Session.deleteOne({ tokenHash: hashToken(token) }).exec();
+}
+
+/**
+ * @function createSessionForUser
+ * @desc Creates a new session for a user and returns the session token and expiration date
+ * @param {string} userId - The ID of the user for whom the session is being created
+ * @throws {Error} if there is a server error while creating the session 
+ * @returns {token: string, expiresAt: Date} - The session token and expiration date
+ */
+export async function createSessionForUser(userId: string) {
+  await connectDB();
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+
+  await Session.create({
+    userId,
+    tokenHash: hashToken(token),
+    expiresAt,
+  });
+
+  return { token, expiresAt };
 }
