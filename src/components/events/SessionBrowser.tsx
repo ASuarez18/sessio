@@ -8,7 +8,7 @@ import {
   type SessionCategory,
 } from "@/lib/mock-data";
 import { Search } from "lucide-react";
-import { SessionCard } from "../SessionCard";
+import { SessionCard } from "../common/SessionCard";
 
 type CategoryFilter = "All" | SessionCategory;
 

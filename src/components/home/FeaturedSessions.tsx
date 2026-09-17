@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FEATURED_SESSIONS } from "@/lib/mock-data";
-import { SessionCard } from "../SessionCard";
+import { SessionCard } from "../common/SessionCard";
 
 export function FeaturedSessions(): React.ReactNode {
   return (

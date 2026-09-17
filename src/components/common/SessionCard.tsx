@@ -1,8 +1,8 @@
 import Image from "next/image";
 import type { Session } from "@/lib/mock-data";
 import { Calendar, MapPin, Users } from "lucide-react";
-import { Badge } from "./ui/Badge";
-import { Button } from "./ui/Button";
+import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
 
 interface SessionCardProps {
   session: Session;
