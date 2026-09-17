@@ -3,11 +3,11 @@ import {
   getEventById,
   updateEvent,
 } from "../../../../services/event.service";
-import Event from "../../../../models/Event";
+import Event, { EVENT_CATEGORIES } from "../../../../models/Event";
 import { connectDB } from "../../../../lib/mongodb";
 import mongoose from "mongoose";
-// import { requireAdmin } from "../../../../lib/permissions"; // AUTH
-// import { getCurrentUser } from "../../../../lib/auth"; // AUTH
+import { getCurrentUser } from "@/lib/auth";
+import { requireAdmin } from "@/lib/permissions";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -31,10 +31,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // TODO: Obtain user Id from session for registration status check
-    // const user = await getCurrentUser();
-    // const currentUserId = user ? user.id : undefined;
-    const currentUserId = undefined;
+    // Check if the user is authenticated to determine registration status
+    const user = await getCurrentUser();
+    const currentUserId = user ? user.id : undefined;
 
     const eventDetail = await getEventById(id, currentUserId);
 
@@ -64,8 +63,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
  */
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
-    // TODO: Auth requirement to update events (only admins)
-    // await requireAdmin();
+    await requireAdmin();
 
     const { id } = await params;
 
@@ -78,6 +76,13 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const body = await request.json();
 
+    if (body.category && !EVENT_CATEGORIES.includes(body.category)) {
+      return NextResponse.json(
+        { error: `Invalid category. Allowed: ${EVENT_CATEGORIES.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
     if (body.maxAttendees !== undefined && (typeof body.maxAttendees !== "number" || body.maxAttendees < 1)) {
       return NextResponse.json(
         { error: "Maximum attendees has to be greater or equal to 1" },
@@ -85,7 +90,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    if (new Date(body.endAt) <= new Date(body.startAt)) {
+    if (body.startAt && body.endAt && new Date(body.endAt) <= new Date(body.startAt)) {
       return NextResponse.json(
         { error: "End date has to be posterior to start date" },
         { status: 400 }
@@ -104,7 +109,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json(updatedEvent, { status: 200 });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Error while updating event";
-    return NextResponse.json({ error: errorMessage }, { status: 400 });
+    const status = errorMessage === "UNAUTHORIZED" ? 401 : errorMessage === "FORBIDDEN" ? 403 : 400;
+
+    return NextResponse.json({ error: errorMessage }, { status });
   }
 }
 
@@ -117,14 +124,13 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
  */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    // TODO: Auth requirement to delete events (only admins)
-    // await requireAdmin();
+    await requireAdmin();
 
     const { id } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "ID de evento inválido" },
+        { error: "Invalid Event Id" },
         { status: 400 }
       );
     }
@@ -140,14 +146,13 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     return NextResponse.json(
-      { message: "Event Succesfully deleted" },
+      { message: "Event successfully deleted" },
       { status: 200 }
     );
-  } catch (error) {
-    console.error("Error while deleting event:", error);
-    return NextResponse.json(
-      { error: "Error while deleting event" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Error while deleting event";
+    const status = errorMessage === "UNAUTHORIZED" ? 401 : errorMessage === "FORBIDDEN" ? 403 : 500;
+
+    return NextResponse.json({ error: errorMessage }, { status });
   }
 }

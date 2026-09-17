@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/mongodb";
-import Event, { IEvent } from "@/models/Event";
+import Event, { IEvent, EventCategory } from "@/models/Event";
 import Registration from "@/models/Registration";
 import mongoose from "mongoose";
 
@@ -18,6 +18,7 @@ export interface CreateEventInput {
   endAt: Date | string;
   location: string;
   maxAttendees: number;
+  category?: EventCategory;
   imageUrl?: string;
   status?: "upcoming" | "ongoing" | "completed" | "cancelled";
 }
@@ -29,6 +30,7 @@ export interface UpdateEventInput {
   endAt?: Date | string;
   location?: string;
   maxAttendees?: number;
+  category?: EventCategory;
   imageUrl?: string;
   status?: "upcoming" | "ongoing" | "completed" | "cancelled";
 }
@@ -38,9 +40,18 @@ export interface UpdateEventInput {
  * @desc Obtains all events ordered by startDate
  * @returns {Promise<IEvent[]>} List of events
  */
-export async function getEvents(): Promise<IEvent[]> {
+export async function getEvents(category?: string): Promise<IEvent[]> {
   await connectDB();
-  return Event.find({}).sort({ startAt: 1 }).exec();
+
+  const filter: Record<string, unknown> = {};
+  if (category) {
+    filter.category = category;
+  }
+
+  return (await Event.find(filter)
+    .sort({ startAt: 1 })
+    .lean()
+    .exec()) as unknown as IEvent[];
 }
 
 /**
@@ -111,6 +122,7 @@ export async function createEvent(data: CreateEventInput): Promise<IEvent> {
 
   const newEvent = new Event({
     ...data,
+    category: data.category || "Uncategorized",
     startAt: new Date(data.startAt),
     endAt: new Date(data.endAt),
   });
@@ -145,7 +157,7 @@ export async function updateEvent(
   }
 
   const updatedEvent = await Event.findByIdAndUpdate(eventId, updateData, {
-    new: true, 
+    new: true,
     runValidators: true,
   }).exec();
 

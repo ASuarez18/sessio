@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getEventRegistrations } from "@/services/registration.service";
 import mongoose from "mongoose";
-// ! import { requireAdmin } from "@/lib/permissions"; // Auth
+import { requireAdmin } from "@/lib/permissions";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -14,8 +14,7 @@ interface RouteParams {
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    // TODO: AUTH
-    // await requireAdmin();
+    await requireAdmin();
 
     const { id } = await params;
 
