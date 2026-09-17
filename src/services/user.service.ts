@@ -7,18 +7,17 @@ import User from "@/models/User";
  */
 
 export async function getAllUsers() {
-	try {
-		await connectDB();
+    try {
+        await connectDB();
 
-		// Fetch all users with Mongoose
-		const users = await User.find({}).select("-passHash").lean();
+        const users = await User.find({ role: { $ne: "admin" } }).select("-passHash").lean();
 
-		return users;
-	} catch (error) {
-		console.error("Error fetching users:", error);
+        return users;
+    } catch (error) {
+        console.error("Error fetching users:", error);
 
-		throw new Error("Failed to fetch users from database");
-	}
+        throw new Error("Failed to fetch users from database");
+    }
 }
 
 /**
