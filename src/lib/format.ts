@@ -1,12 +1,17 @@
-export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, { dateStyle: "medium" });
+export function formatDate(
+  value: string | Date,
+  locales: Intl.LocalesArgument = "en-US",
+  options: Intl.DateTimeFormatOptions = { dateStyle: "medium" },
+): string {
+  return new Date(value).toLocaleDateString(locales, options);
 }
 
-export function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
+export function formatTime(
+  value: string | Date,
+  locales: Intl.LocalesArgument = "en-US",
+  options: Intl.DateTimeFormatOptions = { hour: "numeric", minute: "2-digit" },
+): string {
+  return new Date(value).toLocaleTimeString(locales, options);
 }
 
 export function formatStatus(status: string): string {
