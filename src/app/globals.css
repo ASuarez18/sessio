@@ -85,3 +85,11 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+input {
+  color: #151e1c;
+}
+
+button {
+  cursor: pointer;
+}
