@@ -7,3 +7,6 @@
 
 # env files
 .env*
+
+# next build output (any depth)
+**/.next/

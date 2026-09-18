@@ -1,7 +1,23 @@
 import { connectDB } from "@/lib/mongodb";
 import Registration, { IRegistration } from "@/models/Registration";
-import Event from "@/models/Event";
+import Event, { IEvent } from "@/models/Event";
 import mongoose from "mongoose";
+
+export interface MySession {
+  registrationId: string;
+  eventId: string;
+  title: string;
+  category: string;
+  startAt: string;
+  endAt: string;
+  location: string;
+  status: string;
+}
+
+type PopulatedRegistration = Omit<IRegistration, "event"> & {
+  _id: mongoose.Types.ObjectId;
+  event: IEvent | null;
+};
 
 /**
  * @function registerForEvent
@@ -155,6 +171,49 @@ export async function getEventAvailability(
     spotsLeft,
     isFull: spotsLeft <= 0,
   };
+}
+
+/**
+ * @function getUserUpcomingSessions
+ * @desc Upcoming (future) sessions the user is registered for, as plain DTOs.
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<MySession[]>} Upcoming sessions, newest registration first
+ */
+export async function getUserUpcomingSessions(
+  userId: string,
+): Promise<MySession[]> {
+  await connectDB();
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const registrations = (await Registration.find({
+    user: userId,
+    status: { $ne: "cancelled" },
+  })
+    .populate("event")
+    .sort({ registeredAt: -1 })
+    .lean()
+    .exec()) as unknown as PopulatedRegistration[];
+
+  const now = Date.now();
+
+  return registrations
+    .filter(
+      (reg): reg is PopulatedRegistration & { event: IEvent } =>
+        reg.event !== null && new Date(reg.event.startAt).getTime() >= now,
+    )
+    .map((reg) => ({
+      registrationId: String(reg._id),
+      eventId: String(reg.event._id),
+      title: reg.event.title,
+      category: reg.event.category,
+      startAt: new Date(reg.event.startAt).toISOString(),
+      endAt: new Date(reg.event.endAt).toISOString(),
+      location: reg.event.location,
+      status: reg.status,
+    }));
 }
 
 /**

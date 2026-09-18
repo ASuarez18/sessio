@@ -12,7 +12,11 @@ interface SessionCardProps {
   pollAvailability?: boolean;
 }
 
-export function SessionCard({ session, showTime = false, pollAvailability = false }: SessionCardProps) {
+export function SessionCard({
+  session,
+  showTime = false,
+  pollAvailability = false,
+}: SessionCardProps): React.ReactNode {
   const isFull = session.spotsLeft <= 0;
 
   return (
@@ -43,7 +47,9 @@ export function SessionCard({ session, showTime = false, pollAvailability = fals
         <div className="flex flex-col gap-2 text-sm text-midnight-violet-600">
           <span className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-midnight-violet-400" />
-            {showTime && session.time ? `${session.date} · ${session.time}` : session.date}
+            {showTime && session.time
+              ? `${session.date} · ${session.time}`
+              : session.date}
           </span>
           <span className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-midnight-violet-400" />
