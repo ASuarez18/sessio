@@ -15,9 +15,11 @@ export function SessionCard({
 }: SessionCardProps): React.ReactNode {
   const isFull = session.spotsLeft <= 0;
 
+  // console.log("SessionCard session:", session);
+
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border border-midnight-violet-100 bg-white">
-      <div className="relative aspect-[4/3]">
+      <div className="relative aspect-4/3">
         <Image
           src={session.imageUrl}
           alt={session.title}
