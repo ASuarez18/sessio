@@ -1,4 +1,5 @@
 import { createClient, type EntrySkeletonType } from "contentful";
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import type { Document } from "@contentful/rich-text-types";
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
@@ -64,7 +65,7 @@ export interface FaqItemSkeleton extends EntrySkeletonType {
 
 export interface FaqItemData {
   question: string;
-  answer: string;
+  answer: Document | string; 
 }
 
 export interface FaqSectionData {
@@ -97,7 +98,8 @@ export interface FaqContainerSkeleton extends EntrySkeletonType {
 // 4. ValueCard
 export interface ValueCardFields {
   title: string;
-  body: string;
+  body?: string;
+  description?: Document | string;
   emoji?: string;
 }
 
@@ -106,6 +108,20 @@ export interface ValueCardSkeleton extends EntrySkeletonType {
   fields: ValueCardFields;
 }
 
+// 5. AboutPage
+export interface AboutPageFields {
+  badgeText?: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
+  ctaButtonText?: string;
+}
+
+export interface AboutPageSkeleton extends EntrySkeletonType {
+  contentTypeId: "aboutPage";
+  fields: AboutPageFields;
+}
 
 /**
  * @function getHomeHero
@@ -161,7 +177,6 @@ export async function getFaqSection(): Promise<FaqSectionData | null> {
     if (!response.items.length) return null;
 
     const entry = response.items[0].fields;
-
     const rawQuestions = (entry.questions ?? []) as unknown as FaqQuestionReference[];
 
     const items: FaqItemData[] = rawQuestions.map((q) => {
@@ -169,10 +184,7 @@ export async function getFaqSection(): Promise<FaqSectionData | null> {
 
       return {
         question: itemFields?.question ?? "",
-        answer:
-          typeof itemFields?.answer === "string"
-            ? itemFields.answer
-            : "Consult detail for more info",
+        answer: itemFields?.answer ?? "",
       };
     });
 
@@ -201,5 +213,35 @@ export async function getValueCards(): Promise<ValueCardFields[]> {
   } catch (error) {
     console.error("Error fetching Value Cards from Contentful:", error);
     return [];
+  }
+}
+
+/**
+ * @function getAboutPageData
+ * @desc Fetches the About Page entry data from Contentful
+ * @returns {Promise<AboutPageFields | null>} The About Page data or null if not found
+ */
+export async function getAboutPageData(): Promise<AboutPageFields | null> {
+  try {
+    const response = await contentfulClient.getEntries<AboutPageSkeleton>({
+      content_type: "aboutPage",
+      limit: 1,
+    });
+
+    if (!response.items.length) return null;
+
+    const entry = response.items[0];
+
+    return {
+      badgeText: entry.fields.badgeText ?? "ABOUT & FAQ",
+      heroTitle: entry.fields.heroTitle ?? "Learn together, grow together",
+      heroSubtitle: entry.fields.heroSubtitle ?? "",
+      ctaTitle: entry.fields.ctaTitle,
+      ctaSubtitle: entry.fields.ctaSubtitle,
+      ctaButtonText: entry.fields.ctaButtonText,
+    };
+  } catch (error) {
+    console.error("Error fetching About Page from Contentful:", error);
+    return null;
   }
 }
