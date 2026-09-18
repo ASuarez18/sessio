@@ -1,25 +1,8 @@
-export type SessionCategory =
-  | "Development"
-  | "Design"
-  | "Data"
-  | "Soft Skills"
-  | "Leadership";
-
-export interface Session {
-  id: string;
-  title: string;
-  category: SessionCategory;
-  date: string;
-  time?: string;
-  location: string;
-  spotsLeft: number;
-  imageUrl: string;
-}
-
-export interface CategoryHighlight {
-  category: SessionCategory;
-  count: number;
-}
+import type {
+  Session,
+  SessionCategory,
+  CategoryHighlight,
+} from "@/types/session";
 
 export interface Faq {
   question: string;

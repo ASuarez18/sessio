@@ -1,7 +1,5 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { getUserFromSession } from "@/services/auth.service";
-import { SESSION_COOKIE_NAME } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 /**
  * @GET api/auth/me
@@ -11,13 +9,33 @@ import { SESSION_COOKIE_NAME } from "@/lib/auth";
  * @returns {user: PublicUser} on success, or {error: string} on failure
  */
 export async function GET(): Promise<NextResponse> {
-	const cookieStore = await cookies();
-	const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-	const user = token ? await getUserFromSession(token) : null;
+  try {
+    const user = await getCurrentUser();
 
-	if (!user) {
-		return NextResponse.json({ error: "Authentication required" }, { status: 401 });
-	}
+    if (!user) {
+      return NextResponse.json(
+        { user: null, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
 
-	return NextResponse.json({ user }, { status: 200 });
+    return NextResponse.json(
+      {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+        },
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    return NextResponse.json(
+      { user: null, error: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
