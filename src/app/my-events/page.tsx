@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDate, formatStatus, formatTime } from "@/lib/format";
 import { getUserUpcomingSessions } from "@/services/registration.service";
+import { Footer } from "@/components/common/Footer";
 import { UnregisterButton } from "@/components/my-events/UnregisterButton";
 
 export default async function MyEventsPage(): Promise<React.ReactNode> {
@@ -15,7 +16,8 @@ export default async function MyEventsPage(): Promise<React.ReactNode> {
   const sessions = await getUserUpcomingSessions(user.id);
 
   return (
-    <section className="bg-midnight-violet-50">
+    <>
+      <section className="bg-midnight-violet-50">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <p className="text-sm font-semibold uppercase tracking-widest text-midnight-violet-500">
           Dashboard
@@ -91,6 +93,8 @@ export default async function MyEventsPage(): Promise<React.ReactNode> {
           )}
         </div>
       </div>
-    </section>
+      </section>
+      <Footer />
+    </>
   );
 }
