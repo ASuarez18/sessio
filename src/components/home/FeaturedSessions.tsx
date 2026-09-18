@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { SessionCard } from "../common/SessionCard";
+
+import { SessionCard } from "@/components/events/SessionCard";
 import type { Session } from "@/types/session";
 
 interface FeaturedSessionsProps {
@@ -25,7 +26,7 @@ export function FeaturedSessions({ sessions }: FeaturedSessionsProps): React.Rea
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {sessions.length > 0 ? (
             sessions.map((session) => (
-              <SessionCard key={session.id} session={session} showTime />
+              <SessionCard key={session.id} session={session} showTime pollAvailability />
             ))
           ) : (
             <p className="col-span-3 text-center text-midnight-violet-600 py-8">

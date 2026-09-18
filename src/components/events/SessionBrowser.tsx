@@ -1,12 +1,13 @@
 "use client";
 
 import { useMemo, useState, type ChangeEvent } from "react";
+import { ChevronDown, Search } from "lucide-react";
+
+import { SessionCard } from "@/components/events/SessionCard";
 import {
   type Session,
   type SessionCategory,
 } from "@/types/session";
-import { ChevronDown, Search } from "lucide-react";
-import { SessionCard } from "../common/SessionCard";
 
 type CategoryFilter = "All" | SessionCategory;
 
