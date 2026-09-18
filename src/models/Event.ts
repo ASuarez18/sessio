@@ -1,5 +1,19 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
+export const EVENT_CATEGORIES = [
+  "Data",
+  "Web Dev",
+  "UI design",
+  "Design",
+  "Software Engineering",
+  "AI & ML",
+  "Cybersecurity",
+  "Cloud & DevOps",
+  "Uncategorized",
+] as const;
+
+export type EventCategory = (typeof EVENT_CATEGORIES)[number];
+
 export interface IEvent extends Document {
   title: string;
   description: string;
@@ -7,6 +21,7 @@ export interface IEvent extends Document {
   endAt: Date;
   location: string;
   maxAttendees: number;
+  category: EventCategory;
   status: "upcoming" | "ongoing" | "completed" | "cancelled";
   imageUrl?: string;
   createdAt: Date;  
@@ -53,6 +68,12 @@ const EventSchema = new Schema<IEvent>(
       type: Number,
       required: [true, "Max attendees is required"],
       min: [1, "Max attendees must be at least 1"],
+    },
+    category: {
+      type: String,
+      enum: EVENT_CATEGORIES,
+      default: "Uncategorized",
+      required: true,
     },
     status: {
       type: String,
