@@ -111,6 +111,52 @@ export async function getUserRegistrations(userId: string) {
     .exec();
 }
 
+export interface EventAvailability {
+  eventId: string;
+  maxAttendees: number;
+  registeredCount: number;
+  spotsLeft: number;
+  isFull: boolean;
+}
+
+/**
+ * @function getEventAvailability
+ * @desc Computes the live availability (remaining spots) for an event based on active registrations.
+ * @param {string} eventId - The ID of the event whose availability is being computed
+ * @throws {Error} "INVALID_ID" if the id is malformed, "EVENT_NOT_FOUND" if the event does not exist
+ * @returns {Promise<EventAvailability>} The availability snapshot for the event
+ */
+export async function getEventAvailability(
+  eventId: string,
+): Promise<EventAvailability> {
+  await connectDB();
+
+  if (!mongoose.Types.ObjectId.isValid(eventId)) {
+    throw new Error("INVALID_ID");
+  }
+
+  const event = await Event.findById(eventId).select("maxAttendees").lean();
+  if (!event) {
+    throw new Error("EVENT_NOT_FOUND");
+  }
+
+  const registeredCount = await Registration.countDocuments({
+    event: eventId,
+    status: { $ne: "cancelled" },
+  });
+
+  const maxAttendees = event.maxAttendees ?? 0;
+  const spotsLeft = Math.max(0, maxAttendees - registeredCount);
+
+  return {
+    eventId,
+    maxAttendees,
+    registeredCount,
+    spotsLeft,
+    isFull: spotsLeft <= 0,
+  };
+}
+
 /**
  * @function getEventRegistrations
  * @desc Retrieves all registrations for a specific event, sorted by registration date in descending order
