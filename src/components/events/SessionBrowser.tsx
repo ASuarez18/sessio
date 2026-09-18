@@ -2,25 +2,36 @@
 
 import { useMemo, useState, type ChangeEvent } from "react";
 import {
-  CATEGORY_FILTERS,
-  SESSIONS,
   type Session,
   type SessionCategory,
-} from "@/lib/mock-data";
+} from "@/types/session";
 import { ChevronDown, Search } from "lucide-react";
 import { SessionCard } from "../common/SessionCard";
 
 type CategoryFilter = "All" | SessionCategory;
 
-const FILTER_OPTIONS: CategoryFilter[] = ["All", ...CATEGORY_FILTERS];
+interface SessionBrowserProps {
+  sessions: Session[];
+}
 
-export function SessionBrowser(): React.ReactNode {
+
+export function SessionBrowser({ sessions }: SessionBrowserProps): React.ReactNode {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryFilter>("All");
 
+  const categoryFilters = useMemo(() => {
+    const categories = Array.from(new Set(sessions.map((s) => s.category)));
+    return categories as SessionCategory[];
+  }, [sessions]);
+
+  const filterOptions: CategoryFilter[] = useMemo(
+    () => ["All", ...categoryFilters],
+    [categoryFilters]
+  );
+
   const filtered = useMemo<Session[]>(() => {
     const normalized = query.trim().toLowerCase();
-    return SESSIONS.filter((session) => {
+    return sessions.filter((session) => {
       const matchesCategory =
         category === "All" || session.category === category;
       const matchesQuery =
@@ -30,7 +41,7 @@ export function SessionBrowser(): React.ReactNode {
         session.category.toLowerCase().includes(normalized);
       return matchesCategory && matchesQuery;
     });
-  }, [query, category]);
+  }, [query, category, sessions]);
 
   return (
     <>
@@ -56,7 +67,7 @@ export function SessionBrowser(): React.ReactNode {
             className="w-full appearance-none rounded-xl border border-midnight-violet-200 bg-white px-4 py-3 pr-10 text-midnight-violet-800 focus:outline-none focus:ring-2 focus:ring-midnight-violet-300"
           >
             <option value="All">All categories</option>
-            {CATEGORY_FILTERS.map((option) => (
+            {categoryFilters.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -67,7 +78,7 @@ export function SessionBrowser(): React.ReactNode {
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">
-        {FILTER_OPTIONS.map((option) => (
+        {filterOptions.map((option) => (
           <button
             key={option}
             type="button"
