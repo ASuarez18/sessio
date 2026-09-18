@@ -217,7 +217,6 @@ export default function AdminEventsPage() {
 							</tr>
 						</thead>
 
-						{/* ⚠️ FIX: Removed the nested <tbody> here */}
 						<tbody className="divide-y divide-gray-100">
 							{isLoading ? (
 								<tr>
