@@ -40,9 +40,6 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
         setCurrentPage(1);
     };
 
-    /**
-     * Handle delete user action
-     */
     const handleDelete = async (id?: string) => {
         if (!id) return;
         
@@ -158,9 +155,12 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
                                             </p>
                                         </td>
                                         <td className="px-6 py-4 text-right space-x-2">
-                                            <button className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                                            <Link
+                                                href={`/admin/admin-users/${user._id?.toString()}`}
+                                                className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors inline-block"
+                                            >
                                                 Edit
-                                            </button>
+                                            </Link>
                                             <button 
                                                 onClick={() => handleDelete(user._id?.toString())}
                                                 className="px-3 py-1.5 rounded-lg border border-red-100 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"

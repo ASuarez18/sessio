@@ -1,19 +1,49 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { useState, useEffect, use } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
-export default function CreateAdminPage() {
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+export default function AdminUserFormPage({ params }: PageProps) {
+    const resolvedParams = use(params);
+    const id = resolvedParams.id;
+    const isEditMode = id !== 'create';
+
     const router = useRouter();
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        username: "",
-        password: "",
+        name: '',
+        email: '',
+        username: '',
+        password: '',
     });
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (isEditMode) {
+            const fetchUser = async () => {
+                try {
+                    const res = await fetch(`/api/users/${id}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setFormData({
+                            name: data.name || '',
+                            email: data.email || '',
+                            username: data.username || '',
+                            password: '',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch user data:', error);
+                }
+            };
+            fetchUser();
+        }
+    }, [isEditMode, id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -27,31 +57,39 @@ export default function CreateAdminPage() {
         setLoading(true);
 
         try {
-            const res = await fetch("/api/users", {
-                method: "POST",
+            const url = isEditMode ? `/api/users/${id}` : '/api/users';
+            const method = isEditMode ? 'PUT' : 'POST';
+
+            const payload: any = {
+                name: formData.name,
+                email: formData.email,
+                username: formData.username,
+                role: 'admin',
+            };
+
+            if (!isEditMode || formData.password) {
+                payload.passHash = formData.password;
+            }
+
+            const res = await fetch(url, {
+                method,
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    username: formData.username,
-                    passHash: formData.password,
-                    role: "admin", 
-                }),
+                body: JSON.stringify(payload),
             });
 
             if (res.ok) {
-                alert("Admin user created successfully!");
-                router.push("/admin/admin-users");
+                alert(isEditMode ? 'Admin user updated successfully!' : 'Admin user created successfully!');
+                router.push('/admin/admin-users');
                 router.refresh();
             } else {
                 const data = await res.json();
-                alert(data.error || "Failed to create admin user.");
+                alert(data.error || (isEditMode ? 'Failed to update admin user.' : 'Failed to create admin user.'));
             }
         } catch (error) {
-            console.error("Error creating admin user:", error);
-            alert("An error occurred.");
+            console.error('Error submitting form:', error);
+            alert('An error occurred.');
         } finally {
             setLoading(false);
         }
@@ -67,8 +105,12 @@ export default function CreateAdminPage() {
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to admin users
                 </Link>
-                <h1 className="text-2xl font-bold text-gray-900">Create admin user</h1>
-                <p className="text-sm text-gray-500 mt-1">Add a new system administrator with custom credentials.</p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                    {isEditMode ? 'Edit admin user' : 'Create admin user'}
+                </h1>
+                <p className="text-sm text-gray-500 mt-1">
+                    {isEditMode ? 'Update the details of the system administrator.' : 'Add a new system administrator with custom credentials.'}
+                </p>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5">
@@ -119,15 +161,15 @@ export default function CreateAdminPage() {
 
                 <div>
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
-                        Password
+                        Password {isEditMode && <span className="text-gray-400 font-normal">(Leave blank to keep unchanged)</span>}
                     </label>
                     <input
                         type="password"
                         name="password"
-                        required
+                        required={!isEditMode}
                         value={formData.password}
                         onChange={handleChange}
-                        placeholder="Enter password"
+                        placeholder={isEditMode ? 'Enter new password if changing' : 'Enter password'}
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
                     />
                 </div>
@@ -144,7 +186,7 @@ export default function CreateAdminPage() {
                         disabled={loading}
                         className="px-5 py-2.5 rounded-xl bg-purple-900 hover:bg-purple-800 text-sm font-medium text-white transition-colors disabled:opacity-50"
                     >
-                        {loading ? "Creating..." : "Create admin"}
+                        {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update admin' : 'Create admin')}
                     </button>
                 </div>
             </form>
