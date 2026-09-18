@@ -1,10 +1,10 @@
 import Link from "next/link";
 
+import { SessionCard } from "@/components/common/SessionCard";
 import { connectDB } from "@/lib/mongodb";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
 import type { Session, SessionCategory } from "@/types/session";
-import { SessionCard } from "../common/SessionCard";
 
 async function getFeaturedSessions(): Promise<Session[]> {
   await connectDB();
@@ -40,7 +40,7 @@ async function getFeaturedSessions(): Promise<Session[]> {
         }),
         location: event.location ?? "Online",
         spotsLeft,
-        imageUrl: event.imageUrl ?? "https://picsum.photos/seed/event/800/600",
+        imageUrl: event.imageUrl ?? "/image_not_available.png",
       };
     }),
   );
