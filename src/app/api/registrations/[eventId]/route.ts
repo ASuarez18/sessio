@@ -4,7 +4,10 @@ import {
   unregisterFromEvent,
 } from "@/services/registration.service";
 import mongoose from "mongoose";
-// ! import { getCurrentUser } from "@/lib/auth"; // AUTH
+import { getCurrentUser } from "@/lib/auth"; 
+import { connectDB } from "@/lib/mongodb";
+import Registration from "@/models/Registration";
+import Event from "@/models/Event";
 
 interface RouteParams {
   params: Promise<{ eventId: string }>;
@@ -15,107 +18,75 @@ interface RouteParams {
  * @desc Registers the current user for the specified event.
  * @returns {Object} Registration details.
  */
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ eventId: string }> }
+) {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { eventId } = await params;
+    await connectDB();
 
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      return NextResponse.json(
-        { error: "ID de evento inválido" },
-        { status: 400 }
-      );
-    }
-
-    // TODO: Get user from session or auth context
-    // const user = await getCurrentUser();
-    // if (!user) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-    // const userId = user.id;
-
-    // Temporal fallback to get userId from request body for testing purposes
-    const body = await request.json().catch(() => ({}));
-    const userId = body.userId;
-
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return NextResponse.json(
-        { error: "userId es requerido y debe ser un ObjectId válido" },
-        { status: 400 }
-      );
-    }
-
-    const registration = await registerForEvent(userId, eventId);
-    return NextResponse.json(registration, { status: 201 });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-
-    if (message === "EVENT_NOT_FOUND") {
+    const event = await Event.findById(eventId);
+    if (!event) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
-    if (message === "EVENT_FULL") {
-      return NextResponse.json({ error: "Event is full" }, { status: 400 });
-    }
-    if (message === "ALREADY_REGISTERED") {
-      return NextResponse.json(
-        { error: "You're already registered to this event" },
-        { status: 409 }
-      );
-    }
 
+    const registration = await Registration.create({
+      event: eventId,
+      user: user.id,
+    });
+
+    return NextResponse.json({ registration }, { status: 201 });
+  } catch (error) {
+    console.error("Error creating registration:", error);
     return NextResponse.json(
-      { error: "Error while processing registration" },
+      { error: "Failed to register for event" },
       { status: 500 }
     );
   }
 }
-
 /**
  * @DELETE /api/registrations/[eventId]
  * @desc Unregisters the current user from the specified event.
  * @returns {Object} Success message.
  */
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ eventId: string }> }
+) {
   try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { eventId } = await params;
+    await connectDB();
 
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+    const deletedRegistration = await Registration.findOneAndDelete({
+      event: eventId,
+  user: user.id,
+    });
+
+    if (!deletedRegistration) {
       return NextResponse.json(
-        { error: "Invalid Event Id" },
-        { status: 400 }
-      );
-    }
-
-    // TODO: Obtain userId from session or auth context
-    // const user = await getCurrentUser();
-    // if (!user) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-    // const userId = user.id;
-
-    // Temporal fallback to get userId from request body for testing purposes
-    const body = await request.json().catch(() => ({}));
-    const userId = body.userId;
-
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return NextResponse.json(
-        { error: "userId is required and needs to be a valid ObjectId" },
-        { status: 400 }
-      );
-    }
-
-    const success = await unregisterFromEvent(userId, eventId);
-
-    if (!success) {
-      return NextResponse.json(
-        { error: "No registration found to cancel" },
+        { error: "Registration not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(
-      { message: "Registration succesfully cancelled" },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      message: "Registration successfully cancelled",
+    });
   } catch (error) {
-    console.error("Error while cancelling registration:", error);
+    console.error("Error deleting registration:", error);
     return NextResponse.json(
-      { error: "Error while cancelling registration" },
+      { error: "Failed to cancel registration" },
       { status: 500 }
     );
   }

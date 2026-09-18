@@ -7,7 +7,7 @@ import { IUser, User } from "@/models/User";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
 
-export type PublicUser = Pick<IUser, "name" | "email" | "role"> & { id: string };
+export type PublicUser = Pick<IUser, "name" | "email" | "username" | "role"> & { id: string };
 
 type AuthenticatedSession = {
   user: PublicUser;
@@ -75,7 +75,8 @@ export async function registerUser(name: string, email: string, password: string
  * @throws {Error} if the email or password is invalid
  * @returns {user: PublicUser, token: string, expiresAt: Date} - the authenticated user object with public fields only, session token, and expiration date
  */
-export async function authenticateUser(email: string, password: string): Promise<AuthenticatedSession> {
+// TODO: Implement login also by username in addition to email & remember me function
+export async function authenticateUser(email: string, password: string, rememberMe?: boolean): Promise<AuthenticatedSession> {
   await connectDB();
   const user = await User.findOne({ email: email.trim().toLowerCase() }).select("+passHash").exec();
 
