@@ -2,18 +2,35 @@
 import Link from "next/link";
 import { getAllUsers } from "../../services/user.service";
 import { getEvents } from "../../services/event.service";
+import { getEventRegistrations } from "../../services/registration.service";
 
 /**
  * Admin Dashboard Page (Server Component)
- * Fetches data directly from the Service layer and renders the overview.
  */
 export default async function AdminDashboard() {
-	const users = await getAllUsers();
-	const events = await getEvents();
+	const [users, events] = await Promise.all([getAllUsers(), getEvents()]);
 
-	const upcomingEvents = events.filter((e) => e.status === "upcoming");
-	const completedEvents = events.filter((e) => e.status === "completed");
-	const totalRegistrations = 0;
+	const upcomingEvents = events.filter((e: any) => e.status === "upcoming");
+	const completedEvents = events.filter((e: any) => e.status === "completed");
+
+	const registrationsPromises = events.map((event: any) =>
+		getEventRegistrations(event._id || event.id),
+	);
+	const eventRegistrationsList = await Promise.all(registrationsPromises);
+
+	let totalRegistrations = 0;
+	const attendeeCountMap: Record<string, number> = {};
+
+	eventRegistrationsList.forEach((regs, index) => {
+		const eventId = events[index]._id.toString();
+
+		const activeCount = regs.filter(
+			(r: any) => r.status !== "cancelled",
+		).length;
+
+		attendeeCountMap[eventId] = activeCount;
+		totalRegistrations += activeCount;
+	});
 
 	const getStatusBadge = (status: string) => {
 		switch (status) {
@@ -174,7 +191,7 @@ export default async function AdminDashboard() {
 			<div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
 				<div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
 					<h2 className="font-heading font-bold text-gray-900 text-lg">
-						All events
+						Current events
 					</h2>
 					<div className="flex gap-2">
 						<span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-lg font-medium border border-gray-200">
@@ -204,46 +221,55 @@ export default async function AdminDashboard() {
 						<tbody className="divide-y divide-gray-100">
 							{events.length === 0 ? (
 								<tr>
-									<td colSpan={5} className="py-8 text-center text-gray-500">
+									<td colSpan={4} className="py-8 text-center text-gray-500">
 										No events found.
 									</td>
 								</tr>
 							) : (
-								events.map((event) => (
-									<tr
-										key={event._id.toString()}
-										className="hover:bg-gray-50/50 transition-colors"
-									>
-										<td className="px-6 py-4">
-											<p className="font-semibold text-gray-900 text-sm">
-												{event.title}
-											</p>
-											<p className="text-gray-400 text-xs mt-0.5">
-												{event.location}
-											</p>
-										</td>
-										<td className="px-4 py-4 hidden sm:table-cell">
-											<p className="text-xs text-gray-700 font-medium">
-												{new Date(event.startAt).toLocaleDateString()}
-											</p>
-										</td>
-										<td className="px-4 py-4">
-											<p className="text-xs text-gray-600 font-medium mb-1">
-												0 / {event.maxAttendees}
-											</p>
-											<div className="h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
-												{/* Progress bar placeholder (0%) */}
-												<div
-													className="h-full bg-purple-500 rounded-full"
-													style={{ width: "0%" }}
-												/>
-											</div>
-										</td>
-										<td className="px-4 py-4">
-											{getStatusBadge(event.status)}
-										</td>
-									</tr>
-								))
+								events.map((event: any) => {
+									const eventId = event._id || event.id;
+									const currentAttendees = attendeeCountMap[eventId] || 0;
+									const progressPercent = Math.min(
+										100,
+										(currentAttendees / event.maxAttendees) * 100,
+									);
+
+									return (
+										<tr
+											key={eventId.toString()}
+											className="hover:bg-gray-50/50 transition-colors"
+										>
+											<td className="px-6 py-4">
+												<p className="font-semibold text-gray-900 text-sm">
+													{event.title}
+												</p>
+												<p className="text-gray-400 text-xs mt-0.5">
+													{event.location}
+												</p>
+											</td>
+											<td className="px-4 py-4 hidden sm:table-cell">
+												<p className="text-xs text-gray-700 font-medium">
+													{new Date(event.startAt).toLocaleDateString()}
+												</p>
+											</td>
+											<td className="px-4 py-4">
+												<p className="text-xs text-gray-600 font-medium mb-1">
+													{currentAttendees} / {event.maxAttendees}
+												</p>
+												<div className="h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
+													{/* Real Progress Bar */}
+													<div
+														className={`h-full rounded-full ${progressPercent >= 100 ? "bg-red-500" : "bg-purple-500"}`}
+														style={{ width: `${progressPercent}%` }}
+													/>
+												</div>
+											</td>
+											<td className="px-4 py-4">
+												{getStatusBadge(event.status)}
+											</td>
+										</tr>
+									);
+								})
 							)}
 						</tbody>
 					</table>
