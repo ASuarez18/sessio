@@ -52,7 +52,7 @@ export function Header(): ReactNode {
   };
 
   return (
-    <header className="border-b border-midnight-violet-100 bg-white">
+    <header className="relative z-50 border-b border-midnight-violet-100 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           href="/"
