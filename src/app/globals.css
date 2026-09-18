@@ -1,16 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 @import "tailwindcss";
 
-/* :root {
+:root {
   --background: #ffffff;
   --foreground: #171717;
-} */
+}
 
 @theme inline {
   /* Fonts */
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
-
   /* Colors */
   --color-midnight-violet-50: #f7eef7;
   --color-midnight-violet-100: #efdcee;
@@ -24,41 +23,41 @@
   --color-midnight-violet-900: #231022;
   --color-midnight-violet-950: #180b18;
 
-  --color-raspberry-red-50: #fce9ef;
-  --color-raspberry-red-100: #f9d2df;
-  --color-raspberry-red-200: #f3a5bf;
-  --color-raspberry-red-300: #ed789f;
-  --color-raspberry-red-400: #e74b7f;
-  --color-raspberry-red-500: #e01f5f;
-  --color-raspberry-red-600: #b4184c;
-  --color-raspberry-red-700: #871239;
-  --color-raspberry-red-800: #5a0c26;
-  --color-raspberry-red-900: #2d0613;
-  --color-raspberry-red-950: #1f040d;
+	--color-raspberry-red-50: #fce9ef;
+	--color-raspberry-red-100: #f9d2df;
+	--color-raspberry-red-200: #f3a5bf;
+	--color-raspberry-red-300: #ed789f;
+	--color-raspberry-red-400: #e74b7f;
+	--color-raspberry-red-500: #e01f5f;
+	--color-raspberry-red-600: #b4184c;
+	--color-raspberry-red-700: #871239;
+	--color-raspberry-red-800: #5a0c26;
+	--color-raspberry-red-900: #2d0613;
+	--color-raspberry-red-950: #1f040d;
 
-  --color-cinnabar-50: #fde8e8;
-  --color-cinnabar-100: #fbd2d0;
-  --color-cinnabar-200: #f7a4a1;
-  --color-cinnabar-300: #f37772;
-  --color-cinnabar-400: #ef4943;
-  --color-cinnabar-500: #eb1c14;
-  --color-cinnabar-600: #bc1610;
-  --color-cinnabar-700: #8d110c;
-  --color-cinnabar-800: #5e0b08;
-  --color-cinnabar-900: #2f0604;
-  --color-cinnabar-950: #210403;
+	--color-cinnabar-50: #fde8e8;
+	--color-cinnabar-100: #fbd2d0;
+	--color-cinnabar-200: #f7a4a1;
+	--color-cinnabar-300: #f37772;
+	--color-cinnabar-400: #ef4943;
+	--color-cinnabar-500: #eb1c14;
+	--color-cinnabar-600: #bc1610;
+	--color-cinnabar-700: #8d110c;
+	--color-cinnabar-800: #5e0b08;
+	--color-cinnabar-900: #2f0604;
+	--color-cinnabar-950: #210403;
 
-  --color-ash-grey-50: #f0f5f3;
-  --color-ash-grey-100: #e1eae8;
-  --color-ash-grey-200: #c2d6d0;
-  --color-ash-grey-300: #a4c1b9;
-  --color-ash-grey-400: #86aca1;
-  --color-ash-grey-500: #67988a;
-  --color-ash-grey-600: #53796e;
-  --color-ash-grey-700: #3e5b53;
-  --color-ash-grey-800: #293d37;
-  --color-ash-grey-900: #151e1c;
-  --color-ash-grey-950: #0e1513;
+	--color-ash-grey-50: #f0f5f3;
+	--color-ash-grey-100: #e1eae8;
+	--color-ash-grey-200: #c2d6d0;
+	--color-ash-grey-300: #a4c1b9;
+	--color-ash-grey-400: #86aca1;
+	--color-ash-grey-500: #67988a;
+	--color-ash-grey-600: #53796e;
+	--color-ash-grey-700: #3e5b53;
+	--color-ash-grey-800: #293d37;
+	--color-ash-grey-900: #151e1c;
+	--color-ash-grey-950: #0e1513;
 
   --color-papaya-whip-50: #fef6e7;
   --color-papaya-whip-100: #fdedce;
@@ -74,10 +73,10 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
 }
 
 body {

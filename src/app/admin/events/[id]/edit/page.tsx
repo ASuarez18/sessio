@@ -1,16 +1,18 @@
-// app/admin/events/new/page.tsx
+// app/admin/events/[id]/edit/page.tsx
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 
 /**
- * Create Event Page (Client Component)
+ * Edit Event Page (Client Component)
+ * Fetches existing event data, populates the form, and handles updates.
  */
-
-export default function CreateEventPage() {
+export default function EditEventPage() {
 	const router = useRouter();
+	const params = useParams();
+	const eventId = params.id as string;
 
 	const [formData, setFormData] = useState({
 		title: "",
@@ -24,8 +26,46 @@ export default function CreateEventPage() {
 		imageUrl: "",
 	});
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isInitialLoading, setIsInitialLoading] = useState(true);
+	const [isSaving, setIsSaving] = useState(false);
 	const [error, setError] = useState("");
+
+	useEffect(() => {
+		const fetchEvent = async () => {
+			try {
+				const res = await fetch(`/api/events/${eventId}`);
+				if (!res.ok) throw new Error("Failed to fetch event details");
+
+				const data = await res.json();
+
+				const event = data.event || data;
+
+				const startDate = new Date(event.startAt);
+				const endDate = new Date(event.endAt);
+
+				setFormData({
+					title: event.title || "",
+					description: event.description || "",
+					date: startDate.toISOString().split("T")[0],
+					startTime: startDate.toTimeString().slice(0, 5),
+					endTime: endDate.toTimeString().slice(0, 5),
+					location: event.location || "",
+					maxAttendees: event.maxAttendees?.toString() || "",
+					status: event.status || "upcoming",
+					imageUrl: event.imageUrl || "",
+				});
+			} catch (err: any) {
+				console.error("Error loading event:", err);
+				setError(err.message || "Could not load event data");
+			} finally {
+				setIsInitialLoading(false);
+			}
+		};
+
+		if (eventId) {
+			fetchEvent();
+		}
+	}, [eventId]);
 
 	const handleChange = (
 		e: React.ChangeEvent<
@@ -38,11 +78,10 @@ export default function CreateEventPage() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setIsLoading(true);
+		setIsSaving(true);
 		setError("");
 
 		try {
-			// Combine date and time strings into valid Date objects for the backend
 			const startAt = new Date(`${formData.date}T${formData.startTime}`);
 			const endAt = new Date(`${formData.date}T${formData.endTime}`);
 
@@ -54,38 +93,51 @@ export default function CreateEventPage() {
 				location: formData.location,
 				maxAttendees: Number(formData.maxAttendees),
 				status: formData.status,
-				...(formData.imageUrl && { imageUrl: formData.imageUrl }),
+				imageUrl: formData.imageUrl || "",
 			};
 
-			
-			const res = await fetch("/api/events", {
-				method: "POST",
+			const res = await fetch(`/api/events/${eventId}`, {
+				method: "PATCH",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
 			});
 
 			if (!res.ok) {
 				const errorData = await res.json();
-				throw new Error(errorData.error || "Failed to create event");
+				throw new Error(errorData.error || "Failed to update event");
 			}
 
-			
-			router.push("/admin");
+			// Redirect back to the event detail page upon success
+			router.push(`/admin/events/${eventId}`);
 			router.refresh();
 		} catch (err: any) {
-			console.error("Submission error:", err);
+			console.error("Update error:", err);
 			setError(err.message);
 		} finally {
-			setIsLoading(false);
+			setIsSaving(false);
 		}
 	};
 
+	if (isInitialLoading) {
+		return (
+			<div className="p-8 text-center text-gray-500 font-sans">
+				Loading event details...
+			</div>
+		);
+	}
+
 	return (
 		<div className="p-6 sm:p-8 max-w-7xl mx-auto font-sans">
-			<div className="mb-8">
+			<div className="mb-8 flex items-center justify-between">
 				<h1 className="font-heading text-3xl font-bold text-gray-900">
-					Create event
+					Edit event
 				</h1>
+				<Link
+					href={`/admin/events/${eventId}`}
+					className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+				>
+					Cancel
+				</Link>
 			</div>
 
 			{error && (
@@ -271,23 +323,23 @@ export default function CreateEventPage() {
 
 						<div className="flex gap-4 pt-4">
 							<Link
-								href="/admin"
+								href={`/admin/events/${eventId}`}
 								className="px-6 py-2.5 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
 							>
 								Cancel
 							</Link>
 							<button
 								type="submit"
-								disabled={isLoading}
+								disabled={isSaving}
 								className="px-6 py-2.5 bg-gray-900 text-white font-semibold rounded-lg hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 							>
-								{isLoading ? "Saving..." : "Save event"}
+								{isSaving ? "Updating..." : "Update event"}
 							</button>
 						</div>
 					</form>
 				</div>
 
-				{/* Live Preview Section (Based on Figma Wireframe) */}
+				{/* Live Preview Section */}
 				<div className="lg:col-span-1">
 					<div className="sticky top-8 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
 						<h2 className="font-heading text-lg font-bold text-gray-900 mb-4">
