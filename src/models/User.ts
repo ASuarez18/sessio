@@ -27,6 +27,7 @@ const userSchema = new Schema<UserDocument>(
 		},
     username: {
       type: String,
+			required: true,
       trim: true,
       minlength: 3,
       maxlength: 20,
