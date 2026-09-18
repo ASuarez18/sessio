@@ -13,7 +13,7 @@ type AuthResponse = {
 
 export default function LoginPage(): React.ReactNode {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -31,7 +31,7 @@ const { refreshUser } = useAuth();
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, rememberMe }),
+        body: JSON.stringify({ identifier: identifier, password, rememberMe }),
       });
       const result = (await response.json()) as AuthResponse;
 
@@ -68,15 +68,15 @@ const { refreshUser } = useAuth();
             </div>
           )}
 
-          <label className="text-sm font-bold text-[#69336a]" htmlFor="login-email">
-            Email
+          <label className="text-sm font-bold text-[#69336a]" htmlFor="login-identifier">
+            Email or Username
           </label>
           <input
             className="h-12.5 w-full rounded-xl border border-[#e5b5e0] px-4 outline-[#934295] placeholder:text-[#d095d0]"
-            id="login-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            id="login-identifier"
+            type="text"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             placeholder="Enter your email"
             required
           />
