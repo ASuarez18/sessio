@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 
 interface AdminUser {
@@ -16,6 +17,7 @@ interface AdminUsersClientProps {
 }
 
 export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps) {
+    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
@@ -36,6 +38,33 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
     const handleClear = () => {
         setSearchQuery('');
         setCurrentPage(1);
+    };
+
+    /**
+     * Handle delete user action
+     */
+    const handleDelete = async (id?: string) => {
+        if (!id) return;
+        
+        if (!confirm('Are you sure you want to delete this user?')) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/admin/admin-users/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to delete user');
+            }
+
+            alert('User deleted successfully.');
+            router.refresh();
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('Failed to delete user.');
+        }
     };
 
     return (
@@ -132,7 +161,10 @@ export default function AdminUsersClient({ initialUsers }: AdminUsersClientProps
                                             <button className="px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
                                                 Edit
                                             </button>
-                                            <button className="px-3 py-1.5 rounded-lg border border-red-100 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors">
+                                            <button 
+                                                onClick={() => handleDelete(user._id?.toString())}
+                                                className="px-3 py-1.5 rounded-lg border border-red-100 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+                                            >
                                                 Delete
                                             </button>
                                         </td>
