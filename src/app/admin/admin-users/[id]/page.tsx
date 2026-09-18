@@ -59,9 +59,17 @@ export default function AdminUserFormPage({ params }: PageProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+        setLoading(timeWindow => timeWindow);
 
         try {
+            if (isEditMode) {
+                if (formData.currentPassword && !formData.password) {
+                    alert('New password is required when current password is provided.');
+                    setLoading(false);
+                    return;
+                }
+            }
+
             const url = isEditMode ? `/api/admin/admin-users/${id}` : '/api/admin/admin-users';
             const method = isEditMode ? 'PUT' : 'POST';
 
@@ -84,6 +92,10 @@ export default function AdminUserFormPage({ params }: PageProps) {
                     }
                     payload.passHash = formData.password;
                     payload.currentPassword = formData.currentPassword;
+                } else if (formData.currentPassword) {
+                    alert('New password is required when current password is provided.');
+                    setLoading(false);
+                    return;
                 }
             }
 
@@ -168,6 +180,7 @@ export default function AdminUserFormPage({ params }: PageProps) {
                         type="text"
                         name="username"
                         required={!isEditMode}
+                        minLength={3}
                         value={formData.username}
                         onChange={handleChange}
                         placeholder="Enter username"
@@ -209,7 +222,7 @@ export default function AdminUserFormPage({ params }: PageProps) {
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
-                            required={!isEditMode}
+                            required={!isEditMode || Boolean(formData.currentPassword)}
                             value={formData.password}
                             onChange={handleChange}
                             placeholder={isEditMode ? 'Enter new password if changing' : 'Enter password'}
