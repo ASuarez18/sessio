@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
 
 type AuthResponse = {
   error?: string;
@@ -18,6 +19,8 @@ export default function LoginPage(): React.ReactNode {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+const { refreshUser } = useAuth();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -37,6 +40,7 @@ export default function LoginPage(): React.ReactNode {
         return;
       }
 
+      await refreshUser();
       router.push(result.user.role === "admin" ? "/admin" : "/events");
       router.refresh();
     } catch {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
 
 type AuthResponse = {
   error?: string;
@@ -20,6 +21,8 @@ export default function RegisterPage(): React.ReactNode {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { refreshUser } = useAuth();
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
@@ -47,6 +50,7 @@ export default function RegisterPage(): React.ReactNode {
         return;
       }
 
+      await refreshUser();
       router.push("/events");
       router.refresh();
     } catch {

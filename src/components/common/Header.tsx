@@ -2,18 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { User, LogOut, ShieldAlert } from "lucide-react";
 import Image from "next/image";
 import logo from "@/public/sessio-logo.svg";
 // import brand from "@/public/sessio-full.svg";
-
-interface PublicUser {
-  id: string;
-  name: string;
-  email: string;
-  role: "user" | "admin";
-}
+import { useAuth } from "@/app/context/AuthContext";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
@@ -24,32 +17,10 @@ const NAV_ITEMS = [
 export function Header(): React.ReactNode {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<PublicUser | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
-      } catch {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUser();
-  }, [pathname]);   
+  const { user, isLoading, logout } = useAuth();
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
+    await logout();
     router.push("/login");
     router.refresh();
   };
@@ -59,10 +30,16 @@ export function Header(): React.ReactNode {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           href="/"
-          className="font-serif text-2xl font-bold text-midnight-violet-900"
+          className="flex items-center font-serif text-2xl font-bold text-midnight-violet-900"
         >
-          {/*TODO: Implement this logo <Image src={brand} alt="Sessio logo" height={50}  className="inline-block mr-2" /> */}
-          <Image src={logo} alt="Sessio logo" width={32} height={32} className="inline-block mr-2" />
+          {/* TODO: Implement this logo <Image src={brand} alt="Sessio logo" height={50} className="inline-block mr-2" /> */}
+          <Image
+            src={logo}
+            alt="Sessio logo"
+            width={32}
+            height={32}
+            className="mr-2 inline-block"
+          />
           Sessio
         </Link>
 
@@ -86,7 +63,7 @@ export function Header(): React.ReactNode {
         </nav>
 
         <div className="flex items-center gap-4">
-          {loading ? (
+          {isLoading ? (
             <div className="h-9 w-24 animate-pulse rounded-xl bg-midnight-violet-50" />
           ) : user ? (
             <div className="flex items-center gap-3">
