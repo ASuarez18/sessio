@@ -2,6 +2,7 @@ import { Footer } from "@/components/common/Footer";
 import { SessionBrowser } from "@/components/events/SessionBrowser";
 import { Session, SessionCategory } from "@/types/session";
 import { connectDB } from "@/lib/mongodb";
+import { formatDate, formatTime } from "@/lib/format";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
 
@@ -25,12 +26,12 @@ async function getSessions(): Promise<Session[]> {
         id: eventId,
         title: event.title,
         category: (event.category ?? "Uncategorized") as SessionCategory,
-        date: eventDate.toLocaleDateString("en-US", {
+        date: formatDate(eventDate, "en-US", {
           month: "short",
           day: "numeric",
           year: "numeric",
         }),
-        time: eventDate.toLocaleTimeString("en-US", {
+        time: formatTime(eventDate, "en-US", {
           hour: "2-digit",
           minute: "2-digit",
         }),

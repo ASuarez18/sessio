@@ -1,6 +1,7 @@
 import { use } from "react";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/mongodb";
+import { formatDate, formatTime } from "@/lib/format";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
 import EventDetailClient from "./EventDetailClient";
@@ -37,12 +38,12 @@ async function getEventDetails(id: string): Promise<EventDetailData | null> {
     title: event.title,
     category: (event.category ?? "Uncategorized") as SessionCategory,
     description: event.description,
-    date: eventDate.toLocaleDateString("en-US", {
+    date: formatDate(eventDate, "en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
     }),
-    time: eventDate.toLocaleTimeString("en-US", {
+    time: formatTime(eventDate, "en-US", {
       hour: "2-digit",
       minute: "2-digit",
     }),
