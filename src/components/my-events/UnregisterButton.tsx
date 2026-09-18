@@ -7,9 +7,7 @@ interface UnregisterButtonProps {
   eventId: string;
 }
 
-export function UnregisterButton({
-  eventId,
-}: UnregisterButtonProps): React.ReactNode {
+export function UnregisterButton({ eventId }: UnregisterButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
