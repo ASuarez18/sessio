@@ -1,5 +1,4 @@
 import { createClient, type EntrySkeletonType } from "contentful";
-import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 import type { Document } from "@contentful/rich-text-types";
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID;

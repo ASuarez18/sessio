@@ -13,6 +13,8 @@ import { ValueCards } from "@/components/about/ValueCards";
 import { FaqList } from "@/components/about/FaqList";
 import { CtaBand } from "@/components/about/CtaBand";
 
+export const revalidate = 60;
+
 async function getAboutPageData(): Promise<AboutPageFields | null> {
   try {
     const response = await contentfulClient.getEntries<AboutPageSkeleton>({

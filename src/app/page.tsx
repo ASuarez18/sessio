@@ -9,6 +9,8 @@ import { FeaturedSessions } from "@/components/home/FeaturedSessions";
 import { FaqTeaser } from "@/components/home/FaqTeaser";
 import type { Session, SessionCategory } from "@/types/session";
 
+export const revalidate = 60;
+
 async function getFeaturedSessionsFromDB(): Promise<Session[]> {
   try {
     await connectDB();
