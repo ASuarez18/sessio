@@ -2,23 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth";
+import { formatDate, formatStatus, formatTime } from "@/lib/format";
 import { getUserUpcomingSessions } from "@/services/registration.service";
 import { UnregisterButton } from "@/components/my-events/UnregisterButton";
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, { dateStyle: "medium" });
-}
-
-function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString(undefined, {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
-function formatStatus(status: string): string {
-  return status.charAt(0).toUpperCase() + status.slice(1);
-}
 
 export default async function MyEventsPage(): Promise<React.ReactNode> {
   const user = await getCurrentUser();
