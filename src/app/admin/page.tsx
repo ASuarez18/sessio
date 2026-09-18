@@ -13,7 +13,7 @@ export default async function AdminDashboard() {
 
 	const upcomingEvents = events.filter((e) => e.status === "upcoming");
 	const completedEvents = events.filter((e) => e.status === "completed");
-	const totalRegistrations = 0; // TODO: Calculate actual sum once Registration service is ready
+	const totalRegistrations = 0;
 
 	const getStatusBadge = (status: string) => {
 		switch (status) {
@@ -199,9 +199,6 @@ export default async function AdminDashboard() {
 								<th className="text-left px-4 py-3 text-xs text-gray-500 uppercase tracking-wide font-semibold">
 									Status
 								</th>
-								<th className="text-left px-4 py-3 text-xs text-gray-500 uppercase tracking-wide font-semibold">
-									Action
-								</th>
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-100">
@@ -244,14 +241,6 @@ export default async function AdminDashboard() {
 										</td>
 										<td className="px-4 py-4">
 											{getStatusBadge(event.status)}
-										</td>
-										<td className="px-4 py-4">
-											<Link
-												href={`/admin/events/${event._id.toString()}/edit`}
-												className="text-xs font-medium border border-gray-200 hover:border-gray-400 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-lg transition-all inline-block"
-											>
-												Edit
-											</Link>
 										</td>
 									</tr>
 								))
