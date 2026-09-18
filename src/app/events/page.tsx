@@ -1,11 +1,9 @@
-import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { SessionBrowser } from "@/components/events/SessionBrowser";
 
 export default function EventsPage(): React.ReactNode {
   return (
     <>
-      <Header active="events" />
       <main className="bg-midnight-violet-50">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-midnight-violet-500">
