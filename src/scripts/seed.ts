@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 
 import { connectDB } from "../lib/mongodb";
 import User, { IUser } from "../models/User";
-import Event, { IEvent } from "../models/Event";
+import Event, { IEvent, EventCategory } from "../models/Event";
+import Registration, { IRegistration } from "../models/Registration";
 
 // --- helpers ---------------------------------------------------------------
 
@@ -21,6 +22,12 @@ const plusHours = (date: Date, hours: number): Date => {
   return d;
 };
 
+const slugify = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 // --- seed data (typed, no `any`) -------------------------------------------
 
 type SeedUser = Pick<IUser, "name" | "email" | "username" | "role"> & {
@@ -35,6 +42,7 @@ type SeedEvent = Pick<
   | "endAt"
   | "location"
   | "maxAttendees"
+  | "category"
   | "status"
   | "imageUrl"
 >;
@@ -84,84 +92,54 @@ const SEED_USERS: SeedUser[] = [
   },
 ];
 
-const SEED_EVENTS: SeedEvent[] = [
-  {
-    title: "Community Tech Workshop",
-    description:
-      "A hands-on workshop to learn practical tech skills, share ideas, and connect with other community members. All skill levels are welcome!",
-    startAt: daysFromNow(7),
-    endAt: plusHours(daysFromNow(7), 2),
-    location: "Riverside Community Center, Riverton, CA",
-    maxAttendees: 50,
-    status: "upcoming",
-    imageUrl: "https://picsum.photos/seed/workshop/800/450",
-  },
-  {
-    title: "Summer Music Festival",
-    description:
-      "A full day of live music across three stages featuring local and touring artists.",
-    startAt: daysFromNow(21),
-    endAt: plusHours(daysFromNow(21), 8),
-    location: "Riverside Park, Austin, TX",
-    maxAttendees: 200,
-    status: "upcoming",
-    imageUrl: "https://picsum.photos/seed/music/800/450",
-  },
-  {
-    title: "Tech Talks Conference",
-    description:
-      "Lightning talks and panels from engineers and designers across the region.",
-    startAt: daysFromNow(30),
-    endAt: plusHours(daysFromNow(30), 6),
-    location: "Downtown Convention Center, San Francisco, CA",
-    maxAttendees: 120,
-    status: "upcoming",
-    imageUrl: "https://picsum.photos/seed/techtalks/800/450",
-  },
-  {
-    title: "Intimate Jazz Night",
-    description:
-      "A cozy evening of live jazz. Limited seating — reserve your spot early.",
-    startAt: daysFromNow(10),
-    endAt: plusHours(daysFromNow(10), 3),
-    location: "The Blue Note, Portland, OR",
-    maxAttendees: 3,
-    status: "upcoming",
-    imageUrl: "https://picsum.photos/seed/jazz/800/450",
-  },
-  {
-    title: "Startup Networking Mixer",
-    description:
-      "Meet founders, engineers, and investors over drinks and casual conversation.",
-    startAt: daysFromNow(3),
-    endAt: plusHours(daysFromNow(3), 2),
-    location: "Riverton Hotel, Denver, CO",
-    maxAttendees: 60,
-    status: "ongoing",
-    imageUrl: "https://picsum.photos/seed/mixer/800/450",
-  },
-  {
-    title: "Sustainable Cities Talk",
-    description:
-      "A past event: a discussion on urban sustainability and community planning.",
-    startAt: daysFromNow(-30),
-    endAt: plusHours(daysFromNow(-30), 2),
-    location: "Greenwood Library, Portland, OR",
-    maxAttendees: 80,
-    status: "completed",
-    imageUrl: "https://picsum.photos/seed/cities/800/450",
-  },
-  {
-    title: "Winter Gala (Cancelled)",
-    description: "This event has been cancelled.",
-    startAt: daysFromNow(14),
-    endAt: plusHours(daysFromNow(14), 4),
-    location: "Grand Hall, Denver, CO",
-    maxAttendees: 100,
-    status: "cancelled",
-    imageUrl: "https://picsum.photos/seed/gala/800/450",
-  },
+// 8 categories (excluding "Uncategorized") × 5 = 40 events, evenly distributed.
+const CATEGORIES: EventCategory[] = [
+  "Data",
+  "Web Dev",
+  "UI design",
+  "Design",
+  "Software Engineering",
+  "AI & ML",
+  "Cybersecurity",
+  "Cloud & DevOps",
 ];
+
+const TITLE_TEMPLATES = [
+  "Fundamentals",
+  "Bootcamp",
+  "Masterclass",
+  "Workshop",
+  "Deep Dive",
+];
+
+const LOCATIONS = [
+  "Tech Hub Barcelona",
+  "Campus Nord UPC",
+  "Online — Live",
+  "Disseny Hub Barcelona",
+  "IESE Business School",
+];
+
+const EVENTS_PER_CATEGORY = TITLE_TEMPLATES.length;
+
+const SEED_EVENTS: SeedEvent[] = CATEGORIES.flatMap((category, categoryIndex) =>
+  TITLE_TEMPLATES.map((template, templateIndex) => {
+    const index = categoryIndex * EVENTS_PER_CATEGORY + templateIndex; // 0..39
+    const dayOffset = (index - 12) * 4; // spread across past and future
+    const startAt = daysFromNow(dayOffset);
+    return {
+      title: `${category} ${template}`,
+      description: `A hands-on ${template.toLowerCase()} focused on ${category}.`,
+      startAt,
+      endAt: plusHours(startAt, 2 + (templateIndex % 3)),
+      location: LOCATIONS[index % LOCATIONS.length],
+      maxAttendees: 20 + (templateIndex % 5) * 10,
+      category,
+      status: dayOffset < 0 ? "completed" : "upcoming",
+      imageUrl: `https://picsum.photos/seed/${slugify(category)}-${index}/800/450`,
+    };
+  }),
+);
 
 // --- runner ----------------------------------------------------------------
 
@@ -179,8 +157,12 @@ async function seed(): Promise<void> {
   console.log(`[seed] Connected to database: ${dbName}`);
 
   // Clean slate (dev only).
-  await Promise.all([User.deleteMany({}), Event.deleteMany({})]);
-  console.log("[seed] Cleared existing users / events");
+  await Promise.all([
+    User.deleteMany({}),
+    Event.deleteMany({}),
+    Registration.deleteMany({}),
+  ]);
+  console.log("[seed] Cleared existing users / events / registrations");
 
   // Hash passwords, then strip the raw password before insertion.
   const usersToInsert = await Promise.all(
@@ -193,18 +175,45 @@ async function seed(): Promise<void> {
   const createdUsers = await User.create(usersToInsert);
   const createdEvents = await Event.create(SEED_EVENTS);
 
-  console.log(
-    `[seed] Inserted ${createdUsers.length} users and ${createdEvents.length} events`,
+  // Registrations: give the first regular users a few upcoming sessions each,
+  // and leave the last regular user with no registrations (empty state).
+  const now = Date.now();
+  const upcomingEvents = createdEvents.filter(
+    (event) => new Date(event.startAt).getTime() >= now,
   );
 
-  // Summary of test accounts (never print passHash).
+  const regularUsers = createdUsers.slice(1); // exclude admin
+  const registeringUsers = regularUsers.slice(0, regularUsers.length - 1);
+  const emptyUser = regularUsers[regularUsers.length - 1];
+
+  const registrationsToInsert = registeringUsers.flatMap((user, userIndex) =>
+    Array.from({ length: 3 }, (_, offset) => {
+      const event =
+        upcomingEvents[(userIndex * 3 + offset) % upcomingEvents.length];
+      return {
+        user: user._id as mongoose.Types.ObjectId,
+        event: event._id as mongoose.Types.ObjectId,
+        status: (offset % 2 === 0
+          ? "confirmed"
+          : "registered") as IRegistration["status"],
+      };
+    }),
+  );
+
+  await Registration.create(registrationsToInsert);
+
+  console.log(
+    `[seed] Inserted ${createdUsers.length} users, ${createdEvents.length} events, ${registrationsToInsert.length} registrations`,
+  );
+  console.log(
+    `[seed] Categories: ${CATEGORIES.length} × ${EVENTS_PER_CATEGORY} events each`,
+  );
+  console.log(`[seed] User with no registrations: ${emptyUser.email}`);
+
   console.log("\n[seed] Test accounts:");
   for (const u of SEED_USERS) {
     console.log(`  [${u.role}] ${u.email}  /  ${u.password}`);
   }
-  console.log(
-    "\n[seed] Note: 'Intimate Jazz Night' has maxAttendees=3 to test the full-event flow.\n",
-  );
 }
 
 seed()
