@@ -16,8 +16,8 @@ export default async function MyEventsPage(): Promise<React.ReactNode> {
   const sessions = await getUserUpcomingSessions(user.id);
 
   return (
-    <>
-      <section className="bg-midnight-violet-50">
+    <div className="flex min-h-full flex-col">
+      <section className="flex-1 bg-midnight-violet-50">
       <div className="mx-auto max-w-7xl px-6 py-12">
         <p className="text-sm font-semibold uppercase tracking-widest text-midnight-violet-500">
           Dashboard
@@ -95,6 +95,6 @@ export default async function MyEventsPage(): Promise<React.ReactNode> {
       </div>
       </section>
       <Footer />
-    </>
+    </div>
   );
 }
