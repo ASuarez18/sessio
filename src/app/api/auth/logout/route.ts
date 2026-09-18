@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { destroySession } from "@/services/auth.service";
-import { SESSION_COOKIE_NAME } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 /**
  * @POST api/auth/logout
@@ -10,14 +10,33 @@ import { SESSION_COOKIE_NAME } from "@/lib/auth";
  * @throws {Error} if there is a server error while destroying the session
  * @returns {message: string} on success, or {error: string} on failure
  */
-export async function POST(): Promise<NextResponse> {
-	const cookieStore = await cookies();
-	const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-	if (token) {
-		await destroySession(token);
-	}
+export async function POST() : Promise<NextResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-	const response = NextResponse.json({ message: "Succesfully logged out" }, { status: 200 });
-	response.cookies.delete(SESSION_COOKIE_NAME);
-	return response;
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("sessio_session")?.value;
+
+    if (sessionToken) {
+      await destroySession(sessionToken);
+    }
+
+    const response = NextResponse.json(
+      { message: "Logged out successfully" },
+      { status: 200 }
+    );
+
+    response.cookies.delete("sessio_session");
+
+    return response;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    return NextResponse.json(
+      { error: "Failed to log out" },
+      { status: 500 }
+    );
+  }
 }
