@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 // app/admin/page.tsx
 import Link from "next/link";
 import { getAllUsers } from "../../services/user.service";
@@ -9,6 +11,8 @@ import { getEventRegistrations } from "../../services/registration.service";
  */
 export default async function AdminDashboard() {
 	const [users, events] = await Promise.all([getAllUsers(), getEvents()]);
+
+	console.log("✅️✅️✅️ Fetched events <src/app/admin/page.tsx> :", events);
 
 	const upcomingEvents = events.filter((e: any) => e.status === "upcoming");
 	const completedEvents = events.filter((e: any) => e.status === "completed");
