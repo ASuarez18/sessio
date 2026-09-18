@@ -17,8 +17,6 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    // TODO: The auth team will add the admin role verification here later.
-
     const { id } = await params;
     const body = await request.json();
     
