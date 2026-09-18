@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface IEvent {
 	_id?: string;
@@ -17,6 +18,7 @@ interface IEvent {
 
 /**
  * Admin Events List Page (Client Component)
+ * Handles data fetching, searching, filtering, pagination, and row-click navigation.
  */
 export default function AdminEventsPage() {
 	const [events, setEvents] = useState<IEvent[]>([]);
@@ -28,6 +30,8 @@ export default function AdminEventsPage() {
 	const [statusFilter, setStatusFilter] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 5;
+
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchEvents = async () => {
@@ -212,6 +216,8 @@ export default function AdminEventsPage() {
 								</th>
 							</tr>
 						</thead>
+
+						{/* ⚠️ FIX: Removed the nested <tbody> here */}
 						<tbody className="divide-y divide-gray-100">
 							{isLoading ? (
 								<tr>
@@ -234,7 +240,8 @@ export default function AdminEventsPage() {
 									return (
 										<tr
 											key={eventId}
-											className="hover:bg-gray-50 transition-colors"
+											onClick={() => router.push(`/admin/events/${eventId}`)}
+											className="hover:bg-gray-50 transition-colors cursor-pointer"
 										>
 											<td className="py-4 px-6">
 												<p className="font-semibold text-gray-900 text-sm">
@@ -263,9 +270,11 @@ export default function AdminEventsPage() {
 												{getStatusBadge(event.status)}
 											</td>
 											<td className="py-4 px-6">
+												{/* 💡 e.stopPropagation() prevents the row click from firing */}
 												<Link
 													href={`/admin/events/${eventId}/edit`}
-													className="inline-block border border-gray-300 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100 text-gray-700 transition-colors"
+													onClick={(e) => e.stopPropagation()}
+													className="inline-block border border-gray-300 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-200 text-gray-700 transition-colors"
 												>
 													Edit
 												</Link>
