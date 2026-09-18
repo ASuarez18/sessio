@@ -1,8 +1,12 @@
 import Link from "next/link";
-import { FEATURED_SESSIONS } from "@/lib/mock-data";
 import { SessionCard } from "../common/SessionCard";
+import type { Session } from "@/types/session";
 
-export function FeaturedSessions(): React.ReactNode {
+interface FeaturedSessionsProps {
+  sessions: Session[];
+}
+
+export function FeaturedSessions({ sessions }: FeaturedSessionsProps): React.ReactNode {
   return (
     <section className="bg-midnight-violet-50">
       <div className="mx-auto max-w-7xl px-6 py-16">
@@ -19,9 +23,15 @@ export function FeaturedSessions(): React.ReactNode {
         </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {FEATURED_SESSIONS.map((session) => (
-            <SessionCard key={session.id} session={session} showTime />
-          ))}
+          {sessions.length > 0 ? (
+            sessions.map((session) => (
+              <SessionCard key={session.id} session={session} showTime />
+            ))
+          ) : (
+            <p className="col-span-3 text-center text-midnight-violet-600 py-8">
+              No sessions available at the moment.
+            </p>
+          )}
         </div>
       </div>
     </section>
