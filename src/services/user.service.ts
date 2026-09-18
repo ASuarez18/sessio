@@ -2,10 +2,10 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
 /**
- * Fetches all users
+ * @function getAllUsers
+ * @desc Fetches all users except admins.
  * @returns {Promise<Array>} An array of user objects (excluding password hashes).
  */
-
 export async function getAllUsers() {
     try {
         await connectDB();
@@ -21,7 +21,9 @@ export async function getAllUsers() {
 }
 
 /**
- * Fetches only admin users
+ * @function getAdminUsers
+ * @desc Fetches only admin users.
+ * @returns {Promise<Array>} An array of admin user objects (excluding password hashes).
  */
 export async function getAdminUsers() {
     try {
@@ -35,7 +37,8 @@ export async function getAdminUsers() {
 }
 
 /**
- * Fetches a single user by ID
+ * @function getUserById
+ * @desc Fetches a single user by ID.
  * @param {string} userId - The ID of the user to fetch
  * @returns {Promise<Object|null>} The user object (excluding password hash)
  */
@@ -51,7 +54,8 @@ export async function getUserById(userId: string) {
 }
 
 /**
- * Fetches a single user by ID including password hash (for verification purposes)
+ * @function getUserWithPassword
+ * @desc Fetches a single user by ID including password hash (for verification purposes).
  * @param {string} userId - The ID of the user to fetch
  * @returns {Promise<Object|null>} The user object including password hash
  */
@@ -67,7 +71,8 @@ export async function getUserWithPassword(userId: string) {
 }
 
 /**
- * Creates a new admin user in the database
+ * @function createAdminUser
+ * @desc Creates a new admin user in the database.
  * @param {Object} userData - The user data object containing name, email, username, and passHash
  * @returns {Promise<Object>} The created admin user object (excluding password hash)
  */
@@ -92,7 +97,8 @@ export async function createAdminUser(userData: { name: string; email: string; u
 }
 
 /**
- * Updates an existing user by ID in the database
+ * @function updateUser
+ * @desc Updates an existing user by ID in the database.
  * @param {string} userId - The ID of the user to update
  * @param {Object} updateData - The fields to update
  * @returns {Promise<Object|null>} The updated user object (excluding password hash)
@@ -115,7 +121,8 @@ export async function updateUser(userId: string, updateData: Partial<{ name: str
 }
 
 /**
- * Deletes a user by ID from the database
+ * @function deleteUser
+ * @desc Deletes a user by ID from the database.
  * @param {string} userId - The ID of the user to delete
  * @returns {Promise<Object|null>} The deleted user object
  */

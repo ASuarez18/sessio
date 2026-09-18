@@ -4,9 +4,20 @@ import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 
+interface RouteParams {
+  params: Promise<{ id: string }>;
+}
+
+/**
+ * @GET /api/admin/admin-users/[id]
+ * @desc Obtain the details of a specific admin user by their ID.
+ * @param {NextRequest} request - The incoming request
+ * @param {RouteParams} params - The route parameters containing the user ID
+ * @returns {Promise<NextResponse>} JSON response with user details or error
+ */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: RouteParams
 ) {
   try {
     const { id } = await params;
@@ -29,9 +40,16 @@ export async function GET(
   }
 }
 
+/**
+ * @PUT /api/admin/admin-users/[id]
+ * @desc Updates an existing admin user's information, including secure password hashing if changed.
+ * @param {NextRequest} request - The incoming request containing updated user data
+ * @param {RouteParams} params - The route parameters containing the user ID
+ * @returns {Promise<NextResponse>} JSON response with updated user message or error
+ */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: RouteParams
 ) {
   try {
     const { id } = await params;
@@ -95,9 +113,16 @@ export async function PUT(
   }
 }
 
+/**
+ * @DELETE /api/admin/admin-users/[id]
+ * @desc Deletes a specific admin user from the database.
+ * @param {NextRequest} request - The incoming request
+ * @param {RouteParams} params - The route parameters containing the user ID
+ * @returns {Promise<NextResponse>} JSON response with deletion status or error
+ */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: RouteParams
 ) {
   try {
     const { id } = await params;

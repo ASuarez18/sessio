@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAllUsers, getAdminUsers, createAdminUser } from '@/services/user.service';
 import bcrypt from 'bcryptjs';
 
+/**
+ * @GET /api/users
+ * @desc Obtains a list of users, filtering by role query parameter if provided.
+ * @param {NextRequest} request - The incoming request containing search parameters (e.g., role)
+ * @returns {Promise<NextResponse>} JSON response with the list of users or error
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -25,6 +31,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * @POST /api/users
+ * @desc Creates a new user/admin with a securely hashed password.
+ * @param {NextRequest} request - The incoming request containing the new user data
+ * @returns {Promise<NextResponse>} JSON response with the created user or error
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
