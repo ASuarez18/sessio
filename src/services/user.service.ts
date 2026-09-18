@@ -35,6 +35,22 @@ export async function getAdminUsers() {
 }
 
 /**
+ * Fetches a single user by ID
+ * @param {string} userId - The ID of the user to fetch
+ * @returns {Promise<Object|null>} The user object (excluding password hash)
+ */
+export async function getUserById(userId: string) {
+    try {
+        await connectDB();
+        const user = await User.findById(userId).select("-passHash").lean();
+        return user;
+    } catch (error) {
+        console.error("Error fetching user by ID:", error);
+        throw new Error("Failed to fetch user from database");
+    }
+}
+
+/**
  * Creates a new admin user in the database
  * @param {Object} userData - The user data object containing name, email, username, and passHash
  * @returns {Promise<Object>} The created admin user object (excluding password hash)

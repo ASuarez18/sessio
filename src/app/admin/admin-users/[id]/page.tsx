@@ -20,6 +20,7 @@ export default function AdminUserFormPage({ params }: PageProps) {
         email: '',
         username: '',
         password: '',
+        currentPassword: '',
     });
     const [loading, setLoading] = useState(false);
 
@@ -27,14 +28,16 @@ export default function AdminUserFormPage({ params }: PageProps) {
         if (isEditMode) {
             const fetchUser = async () => {
                 try {
-                    const res = await fetch(`/api/users/${id}`);
+                    const res = await fetch(`/api/admin/admin-users/${id}`);
                     if (res.ok) {
                         const data = await res.json();
+                        const userData = data.user || data;
                         setFormData({
-                            name: data.name || '',
-                            email: data.email || '',
-                            username: data.username || '',
+                            name: userData.name || '',
+                            email: userData.email || '',
+                            username: userData.username || '',
                             password: '',
+                            currentPassword: '',
                         });
                     }
                 } catch (error) {
@@ -57,18 +60,29 @@ export default function AdminUserFormPage({ params }: PageProps) {
         setLoading(true);
 
         try {
-            const url = isEditMode ? `/api/users/${id}` : '/api/users';
+            const url = isEditMode ? `/api/admin/admin-users/${id}` : '/api/admin/admin-users';
             const method = isEditMode ? 'PUT' : 'POST';
 
             const payload: any = {
-                name: formData.name,
-                email: formData.email,
-                username: formData.username,
                 role: 'admin',
             };
 
-            if (!isEditMode || formData.password) {
+            if (formData.name) payload.name = formData.name;
+            if (formData.email) payload.email = formData.email;
+            if (formData.username) payload.username = formData.username;
+
+            if (!isEditMode) {
                 payload.passHash = formData.password;
+            } else {
+                if (formData.password) {
+                    if (!formData.currentPassword) {
+                        alert('Current password is required to change password.');
+                        setLoading(false);
+                        return;
+                    }
+                    payload.passHash = formData.password;
+                    payload.currentPassword = formData.currentPassword;
+                }
             }
 
             const res = await fetch(url, {
@@ -114,14 +128,14 @@ export default function AdminUserFormPage({ params }: PageProps) {
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5">
-                <div>
+                <div className="w-1/3 min-w-[200px]">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
                         Name
                     </label>
                     <input
                         type="text"
                         name="name"
-                        required
+                        required={!isEditMode}
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Enter full name"
@@ -136,7 +150,7 @@ export default function AdminUserFormPage({ params }: PageProps) {
                     <input
                         type="email"
                         name="email"
-                        required
+                        required={!isEditMode}
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="Enter email"
@@ -144,14 +158,14 @@ export default function AdminUserFormPage({ params }: PageProps) {
                     />
                 </div>
 
-                <div>
+                <div className="w-1/3 min-w-[200px]">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
                         Username
                     </label>
                     <input
                         type="text"
                         name="username"
-                        required
+                        required={!isEditMode}
                         value={formData.username}
                         onChange={handleChange}
                         placeholder="Enter username"
@@ -173,6 +187,23 @@ export default function AdminUserFormPage({ params }: PageProps) {
                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
                     />
                 </div>
+
+                {isEditMode && formData.password && (
+                    <div>
+                        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                            Current Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            name="currentPassword"
+                            required={Boolean(formData.password)}
+                            value={formData.currentPassword}
+                            onChange={handleChange}
+                            placeholder="Enter current password to confirm change"
+                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
+                        />
+                    </div>
+                )}
 
                 <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-100">
                     <Link
