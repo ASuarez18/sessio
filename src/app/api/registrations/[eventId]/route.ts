@@ -1,17 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import {
-  registerForEvent,
-  unregisterFromEvent,
-} from "@/services/registration.service";
-import mongoose from "mongoose";
-import { getCurrentUser } from "@/lib/auth"; 
+import { NextResponse } from "next/server";
+import {} from "@/services/registration.service";
+import { getCurrentUser } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import Registration from "@/models/Registration";
 import Event from "@/models/Event";
-
-interface RouteParams {
-  params: Promise<{ eventId: string }>;
-}
 
 /**
  * @POST /api/registrations/[eventId]
@@ -20,7 +12,7 @@ interface RouteParams {
  */
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ eventId: string }> }
+  { params }: { params: Promise<{ eventId: string }> },
 ) {
   try {
     const user = await getCurrentUser();
@@ -31,9 +23,29 @@ export async function POST(
     const { eventId } = await params;
     await connectDB();
 
+    const existingRegistration = await Registration.findOne({
+      event: eventId,
+      user: user.id,
+    });
+
+    if (existingRegistration) {
+      return NextResponse.json(
+        { error: "User is already registered for this event" },
+        { status: 409 },
+      );
+    }
+
     const event = await Event.findById(eventId);
     if (!event) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    const currentRegistrationsCount = await Registration.countDocuments({ event: eventId });
+    if (event.maxAttendees && currentRegistrationsCount >= event.maxAttendees) {
+      return NextResponse.json(
+        { error: "Event is full. No spots left available." },
+        { status: 400 }
+      );
     }
 
     const registration = await Registration.create({
@@ -46,7 +58,7 @@ export async function POST(
     console.error("Error creating registration:", error);
     return NextResponse.json(
       { error: "Failed to register for event" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -57,7 +69,7 @@ export async function POST(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ eventId: string }> }
+  { params }: { params: Promise<{ eventId: string }> },
 ) {
   try {
     const user = await getCurrentUser();
@@ -70,13 +82,13 @@ export async function DELETE(
 
     const deletedRegistration = await Registration.findOneAndDelete({
       event: eventId,
-  user: user.id,
+      user: user.id,
     });
 
     if (!deletedRegistration) {
       return NextResponse.json(
         { error: "Registration not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -87,7 +99,7 @@ export async function DELETE(
     console.error("Error deleting registration:", error);
     return NextResponse.json(
       { error: "Failed to cancel registration" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
