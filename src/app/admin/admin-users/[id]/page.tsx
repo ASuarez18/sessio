@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -23,6 +23,8 @@ export default function AdminUserFormPage({ params }: PageProps) {
         currentPassword: '',
     });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 
     useEffect(() => {
         if (isEditMode) {
@@ -143,7 +145,7 @@ export default function AdminUserFormPage({ params }: PageProps) {
                     />
                 </div>
 
-                <div>
+                <div className="w-2/3 min-w-[320px]">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
                         Email
                     </label>
@@ -173,37 +175,55 @@ export default function AdminUserFormPage({ params }: PageProps) {
                     />
                 </div>
 
-                <div>
+                {isEditMode && (
+                    <div className="w-2/3 min-w-[320px]">
+                        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                            Confirm Current Password
+                        </label>
+                        <div className="relative">
+                            <input
+                                type={showCurrentPassword ? 'text' : 'password'}
+                                name="currentPassword"
+                                required={Boolean(formData.password)}
+                                value={formData.currentPassword}
+                                onChange={handleChange}
+                                placeholder="Enter current password to confirm change"
+                                className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                            >
+                                {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                <div className="w-2/3 min-w-[320px]">
                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
                         Password {isEditMode && <span className="text-gray-400 font-normal">(Leave blank to keep unchanged)</span>}
                     </label>
-                    <input
-                        type="password"
-                        name="password"
-                        required={!isEditMode}
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder={isEditMode ? 'Enter new password if changing' : 'Enter password'}
-                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
-                    />
-                </div>
-
-                {isEditMode && formData.password && (
-                    <div>
-                        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
-                            Current Password <span className="text-red-500">*</span>
-                        </label>
+                    <div className="relative">
                         <input
-                            type="password"
-                            name="currentPassword"
-                            required={Boolean(formData.password)}
-                            value={formData.currentPassword}
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            required={!isEditMode}
+                            value={formData.password}
                             onChange={handleChange}
-                            placeholder="Enter current password to confirm change"
-                            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
+                            placeholder={isEditMode ? 'Enter new password if changing' : 'Enter password'}
+                            className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:border-purple-600 text-sm"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                        >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
                     </div>
-                )}
+                </div>
 
                 <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-100">
                     <Link

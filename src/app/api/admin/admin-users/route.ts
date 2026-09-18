@@ -1,25 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllUsers, getAdminUsers, createAdminUser } from '@/services/user.service';
+import { createAdminUser, getAdminUsers } from '@/services/user.service';
 import bcrypt from 'bcryptjs';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const role = searchParams.get('role');
-
-    let users;
-    if (role === 'admin') {
-      users = await getAdminUsers();
-    } else {
-      users = await getAllUsers();
-    }
-
+    const users = await getAdminUsers();
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
-    console.error('API Error in GET /api/users:', error);
-    
+    console.error('API Error in GET /api/admin/admin-users:', error);
     return NextResponse.json(
-      { error: 'Failed to retrieve users' },
+      { error: 'Failed to retrieve admin users' },
       { status: 500 }
     );
   }
@@ -42,8 +32,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newAdmin, { status: 201 });
   } catch (error) {
-    console.error('API Error in POST /api/users:', error);
-    
+    console.error('API Error in POST /api/admin/admin-users:', error);
     return NextResponse.json(
       { error: 'Failed to create admin user' },
       { status: 500 }

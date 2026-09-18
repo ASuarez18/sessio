@@ -51,6 +51,22 @@ export async function getUserById(userId: string) {
 }
 
 /**
+ * Fetches a single user by ID including password hash (for verification purposes)
+ * @param {string} userId - The ID of the user to fetch
+ * @returns {Promise<Object|null>} The user object including password hash
+ */
+export async function getUserWithPassword(userId: string) {
+    try {
+        await connectDB();
+        const user = await User.findById(userId).lean();
+        return user;
+    } catch (error) {
+        console.error("Error fetching user with password by ID:", error);
+        throw new Error("Failed to fetch user from database");
+    }
+}
+
+/**
  * Creates a new admin user in the database
  * @param {Object} userData - The user data object containing name, email, username, and passHash
  * @returns {Promise<Object>} The created admin user object (excluding password hash)
@@ -81,7 +97,7 @@ export async function createAdminUser(userData: { name: string; email: string; u
  * @param {Object} updateData - The fields to update
  * @returns {Promise<Object|null>} The updated user object (excluding password hash)
  */
-export async function updateUser(userId: string, updateData: Partial<{ name: string; email: string; username: string; role: string }>) {
+export async function updateUser(userId: string, updateData: Partial<{ name: string; email: string; username: string; role: string; passHash: string }>) {
     try {
         await connectDB();
 
