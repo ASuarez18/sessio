@@ -6,7 +6,7 @@ import {
   type SessionCategory,
 } from "@/types/session";
 import { ChevronDown, Search } from "lucide-react";
-import { SessionCard } from "../common/SessionCard";
+import { SessionCard } from "./SessionCard";
 
 type CategoryFilter = "All" | SessionCategory;
 

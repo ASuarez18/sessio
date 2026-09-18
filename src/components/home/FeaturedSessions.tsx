@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { SessionCard } from "@/components/common/SessionCard";
+import { SessionCard } from "@/components/events/SessionCard";
 import { connectDB } from "@/lib/mongodb";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
@@ -46,7 +46,7 @@ async function getFeaturedSessions(): Promise<Session[]> {
   );
 }
 
-export async function FeaturedSessions(): Promise<React.ReactNode> {
+export async function FeaturedSessions() {
   const sessions = await getFeaturedSessions();
 
   if (sessions.length === 0) {
@@ -70,7 +70,12 @@ export async function FeaturedSessions(): Promise<React.ReactNode> {
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {sessions.map((session) => (
-            <SessionCard key={session.id} session={session} showTime />
+            <SessionCard
+              key={session.id}
+              session={session}
+              showTime
+              pollAvailability
+            />
           ))}
         </div>
       </div>

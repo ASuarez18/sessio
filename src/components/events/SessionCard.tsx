@@ -1,6 +1,7 @@
-import { Calendar, MapPin, Users } from "lucide-react";
 import Image from "next/image";
+import { Calendar, MapPin, Users } from "lucide-react";
 
+import { SessionSpots } from "@/components/events/SessionSpots";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import type { Session } from "@/types/session";
@@ -8,14 +9,11 @@ import type { Session } from "@/types/session";
 interface SessionCardProps {
   session: Session;
   showTime?: boolean;
+  pollAvailability?: boolean;
 }
 
-export function SessionCard({
-  session,
-  showTime = false,
-}: SessionCardProps): React.ReactNode {
+export function SessionCard({ session, showTime = false, pollAvailability = false }: SessionCardProps) {
   const isFull = session.spotsLeft <= 0;
-
 
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border border-midnight-violet-100 bg-white">
@@ -45,22 +43,20 @@ export function SessionCard({
         <div className="flex flex-col gap-2 text-sm text-midnight-violet-600">
           <span className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-midnight-violet-400" />
-            {showTime && session.time
-              ? `${session.date} · ${session.time}`
-              : session.date}
+            {showTime && session.time ? `${session.date} · ${session.time}` : session.date}
           </span>
           <span className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-midnight-violet-400" />
             {session.location}
           </span>
-          <span
-            className={`flex items-center gap-2 ${
-              isFull ? "text-raspberry-red-600" : "text-green-600"
-            }`}
-          >
-            <Users className="h-4 w-4" />
-            {isFull ? "Full" : `${session.spotsLeft} spots left`}
-          </span>
+          {pollAvailability ? (
+            <SessionSpots eventId={session.id} initialSpotsLeft={session.spotsLeft} />
+          ) : (
+            <span className={`flex items-center gap-2 ${isFull ? "text-raspberry-red-600" : "text-green-600"}`}>
+              <Users className="h-4 w-4" />
+              {isFull ? "Full" : `${session.spotsLeft} spots left`}
+            </span>
+          )}
         </div>
 
         <Button
