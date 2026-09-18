@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Session } from "@/lib/mock-data";
+import type { Session } from "@/types/session";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -15,9 +15,10 @@ export function SessionCard({
 }: SessionCardProps): React.ReactNode {
   const isFull = session.spotsLeft <= 0;
 
+
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border border-midnight-violet-100 bg-white">
-      <div className="relative aspect-[4/3]">
+      <div className="relative aspect-4/3">
         <Image
           src={session.imageUrl}
           alt={session.title}

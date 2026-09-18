@@ -13,6 +13,10 @@ type AuthResponse = {
 
 export default function LoginPage(): React.ReactNode {
   const router = useRouter();
+  const searchParams = new URLSearchParams();
+
+  const redirectPath = searchParams.get("from") || "/events";
+
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,9 +24,11 @@ export default function LoginPage(): React.ReactNode {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-const { refreshUser } = useAuth();
+  const { refreshUser } = useAuth();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+  async function handleSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> {
     event.preventDefault();
     setError("");
     setIsSubmitting(true);
@@ -31,7 +37,7 @@ const { refreshUser } = useAuth();
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: identifier, password, rememberMe }),
+        body: JSON.stringify({ identifier, password, rememberMe }),
       });
       const result = (await response.json()) as AuthResponse;
 
@@ -41,7 +47,10 @@ const { refreshUser } = useAuth();
       }
 
       await refreshUser();
-      router.push(result.user.role === "admin" ? "/admin" : "/events");
+
+      const destination =
+        result.user.role === "admin" ? "/admin" : redirectPath;
+      router.push(destination);
       router.refresh();
     } catch {
       setError("Unable to connect. Please try again.");
@@ -54,8 +63,12 @@ const { refreshUser } = useAuth();
     <div className="flex min-h-[calc(100vh-80px)] items-center justify-center bg-[#f8eff8] px-6 py-12">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <p className="mb-2 text-xs font-bold tracking-[2px] text-[#b54eb4]">WELCOME BACK</p>
-          <h1 className="font-serif text-3xl font-bold text-[#241426]">Sign in to Sessio</h1>
+          <p className="mb-2 text-xs font-bold tracking-[2px] text-[#b54eb4]">
+            WELCOME BACK
+          </p>
+          <h1 className="font-serif text-3xl font-bold text-[#241426]">
+            Sign in to Sessio
+          </h1>
         </div>
 
         <form
@@ -68,7 +81,10 @@ const { refreshUser } = useAuth();
             </div>
           )}
 
-          <label className="text-sm font-bold text-[#69336a]" htmlFor="login-identifier">
+          <label
+            className="text-sm font-bold text-[#69336a]"
+            htmlFor="login-identifier"
+          >
             Email or Username
           </label>
           <input
@@ -81,7 +97,10 @@ const { refreshUser } = useAuth();
             required
           />
 
-          <label className="text-sm font-bold text-[#69336a]" htmlFor="login-password">
+          <label
+            className="text-sm font-bold text-[#69336a]"
+            htmlFor="login-password"
+          >
             Password
           </label>
           <div className="relative w-full">
@@ -100,7 +119,11 @@ const { refreshUser } = useAuth();
               className="absolute right-3 top-1/2 -translate-y-1/2 text-[#934295] hover:text-[#713273]"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
             </button>
           </div>
 
@@ -126,7 +149,10 @@ const { refreshUser } = useAuth();
 
           <p className="mt-4 text-center text-sm text-[#69336a]">
             Don&apos;t have an account?{" "}
-            <Link className="font-bold text-[#934295] hover:underline" href="/register">
+            <Link
+              className="font-bold text-[#934295] hover:underline"
+              href="/register"
+            >
               Create account
             </Link>
           </p>

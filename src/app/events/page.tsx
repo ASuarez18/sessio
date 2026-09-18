@@ -1,7 +1,50 @@
 import { Footer } from "@/components/common/Footer";
 import { SessionBrowser } from "@/components/events/SessionBrowser";
+import { Session, SessionCategory } from "@/types/session";
+import { connectDB } from "@/lib/mongodb";
+import Event from "@/models/Event";
+import Registration from "@/models/Registration";
 
-export default function EventsPage(): React.ReactNode {
+async function getSessions(): Promise<Session[]> {
+  await connectDB();
+  const events = await Event.find({}).sort({ startAt: 1 }).lean();
+
+  return Promise.all(
+    events.map(async (event) => {
+      const eventId = event._id.toString();
+      const registeredCount = await Registration.countDocuments({
+        event: eventId,
+      });
+
+      const maxAttendees = event.maxAttendees ?? 0;
+      const spotsLeft = Math.max(0, maxAttendees - registeredCount);
+
+      const eventDate = event.startAt ? new Date(event.startAt) : new Date();
+
+      return {
+        id: eventId,
+        title: event.title,
+        category: (event.category ?? "Uncategorized") as SessionCategory,
+        date: eventDate.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
+        time: eventDate.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        location: event.location ?? "Online",
+        spotsLeft,
+        imageUrl: event.imageUrl ?? "https://picsum.photos/seed/event/800/600",
+      };
+    })
+  );
+}
+
+export default async function EventsPage(): Promise<React.ReactNode> {
+  const sessions = await getSessions();
+
   return (
     <>
       <main className="bg-midnight-violet-50">
@@ -13,7 +56,7 @@ export default function EventsPage(): React.ReactNode {
             Upcoming sessions
           </h1>
           <div className="mt-8">
-            <SessionBrowser />
+            <SessionBrowser sessions={sessions} />
           </div>
         </div>
       </main>
