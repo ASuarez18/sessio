@@ -1,11 +1,28 @@
 import { cookies } from 'next/headers';
 import { SESSION_COOKIE_NAME } from '@/lib/auth';
 import { getUserFromSession } from '@/services/auth.service';
+import { getAdminUsers } from '@/services/user.service';
 import AdminUsersClient from "./admin-users-client";
 
+export const dynamic = 'force-dynamic';
+
+interface RawAdminUser {
+    _id?: { toString(): string } | string;
+    name: string;
+    email: string;
+    username?: string;
+    role?: string;
+}
+
 export default async function AdminUsersPage() {
-    let adminUsers = [];
-    let currentUserId = undefined;
+    let adminUsers: Array<{
+        _id?: string;
+        name: string;
+        email: string;
+        username?: string;
+    }> = [];
+    
+    let currentUserId: string | undefined = undefined;
 
     try {
         const cookieStore = await cookies();
@@ -15,16 +32,20 @@ export default async function AdminUsersPage() {
             currentUserId = currentUser?.id;
         }
 
-        const res = await fetch('http://localhost:3000/api/users?role=admin', {
-            cache: 'no-store'
-        });
-        if (res.ok) {
-            const data = await res.json();
-            adminUsers = data;
-        }
+        const rawUsers = (await getAdminUsers()) as RawAdminUser[];
+        
+        adminUsers = rawUsers.map((user) => ({
+            ...user,
+            _id: user._id?.toString(),
+        }));
     } catch (error) {
         console.error("Failed to fetch admin users:", error);
     }
 
-    return <AdminUsersClient initialUsers={adminUsers} currentUserId={currentUserId} />;
+    return (
+        <AdminUsersClient 
+            initialUsers={adminUsers} 
+            currentUserId={currentUserId} 
+        />
+    );
 }
