@@ -174,7 +174,7 @@ export default async function AdminDashboard() {
 			<div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
 				<div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
 					<h2 className="font-heading font-bold text-gray-900 text-lg">
-						All events
+						Current events
 					</h2>
 					<div className="flex gap-2">
 						<span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-lg font-medium border border-gray-200">
