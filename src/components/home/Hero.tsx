@@ -1,14 +1,30 @@
 import Image from "next/image";
-import { CATEGORY_HIGHLIGHTS } from "@/lib/mock-data";
 import { Button } from "../ui/Button";
 import { GlassCard } from "../ui/GlassCard";
 import type { HeroSectionFields } from "@/lib/contenful";
 
-interface HeroProps {
-  heroData?: HeroSectionFields | null;
+interface CategoryHighlight {
+  category: string;
+  count: number;
 }
 
-export function Hero({ heroData }: HeroProps): React.ReactNode {
+interface HeroProps {
+  heroData?: HeroSectionFields | null;
+  categoryHighlights?: CategoryHighlight[];
+}
+
+const ALL_CATEGORIES = [
+  "Web Dev",
+  "Software Engineering",
+  "AI & ML",
+  "UI design",
+  "Design",
+  "Data",
+  "Cybersecurity",
+  "Cloud & DevOps",
+];
+
+export function Hero({ heroData, categoryHighlights = [] }: HeroProps): React.ReactNode {
   const badgeText = heroData?.subtitle || "WORKSHOPS & TRAINING";
   const title = heroData?.title || "Find your next session";
   const subtitle =
@@ -28,6 +44,26 @@ export function Hero({ heroData }: HeroProps): React.ReactNode {
         ? `https:${heroData.image.fields.file.url}`
         : heroData.image.fields.file.url
       : "https://picsum.photos/seed/sessio-hero/1600/900";
+
+  const activeCategories = ALL_CATEGORIES.map((catName) => {
+    const found = categoryHighlights.find(
+      (item) => item.category?.trim().toLowerCase() === catName.toLowerCase()
+    );
+    return {
+      category: catName,
+      count: found ? found.count : 0,
+    };
+  }).filter((item) => item.count > 0);
+
+  const displayCategories =
+    activeCategories.length > 0
+      ? activeCategories
+      : [
+          { category: "Web Dev", count: 0 },
+          { category: "Software Engineering", count: 0 },
+          { category: "AI & ML", count: 0 },
+          { category: "UI design", count: 0 },
+        ];
 
   return (
     <section className="relative overflow-hidden">
@@ -62,13 +98,13 @@ export function Hero({ heroData }: HeroProps): React.ReactNode {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {CATEGORY_HIGHLIGHTS.map((item) => (
+            {displayCategories.map((item) => (
               <GlassCard key={item.category}>
                 <p className="text-xs font-semibold uppercase tracking-widest text-midnight-violet-200">
                   {item.category}
                 </p>
                 <p className="mt-2 text-lg font-semibold text-white">
-                  {item.count} sessions
+                  {item.count} {item.count === 1 ? "session" : "sessions"}
                 </p>
               </GlassCard>
             ))}

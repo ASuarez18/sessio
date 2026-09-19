@@ -8,6 +8,7 @@ import { Hero } from "@/components/home/Hero";
 import { FeaturedSessions } from "@/components/home/FeaturedSessions";
 import { FaqTeaser } from "@/components/home/FaqTeaser";
 import type { Session, SessionCategory } from "@/types/session";
+import { getCategoryCountsFromDB } from "@/models/Category";
 
 export const revalidate = 60;
 
@@ -63,16 +64,17 @@ async function getFeaturedSessionsFromDB(): Promise<Session[]> {
 }
 
 export default async function HomePage(): Promise<React.ReactNode> {
-  const [heroData, faqData, featuredSessions] = await Promise.all([
+  const [heroData, faqData, featuredSessions, categoryHighlights] = await Promise.all([
     getHomeHero(),
     getFaqSection(),
     getFeaturedSessionsFromDB(),
+    getCategoryCountsFromDB(),
   ]);
 
   return (
     <>
       <main>
-        <Hero heroData={heroData} />
+        <Hero heroData={heroData} categoryHighlights={categoryHighlights} />
         <FeaturedSessions sessions={featuredSessions} />
         <FaqTeaser faqData={faqData} />
       </main>
