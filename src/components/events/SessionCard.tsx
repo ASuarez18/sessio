@@ -40,7 +40,7 @@ export function SessionCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <h3 className="font-serif text-xl font-bold text-midnight-violet-900">
+        <h3 className="font-heading text-xl font-bold text-midnight-violet-900">
           {session.title}
         </h3>
 
@@ -56,9 +56,14 @@ export function SessionCard({
             {session.location}
           </span>
           {pollAvailability ? (
-            <SessionSpots eventId={session.id} initialSpotsLeft={session.spotsLeft} />
+            <SessionSpots
+              eventId={session.id}
+              initialSpotsLeft={session.spotsLeft}
+            />
           ) : (
-            <span className={`flex items-center gap-2 ${isFull ? "text-raspberry-red-600" : "text-green-600"}`}>
+            <span
+              className={`flex items-center gap-2 ${isFull ? "text-raspberry-red-600" : "text-green-600"}`}
+            >
               <Users className="h-4 w-4" />
               {isFull ? "Full" : `${session.spotsLeft} spots left`}
             </span>

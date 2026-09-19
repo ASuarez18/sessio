@@ -10,7 +10,7 @@ export function Footer(): React.ReactNode {
   return (
     <footer className="mt-auto border-t border-midnight-violet-100 bg-white">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 sm:flex-row">
-        <span className="font-serif text-xl font-bold text-midnight-violet-900">
+        <span className="font-heading text-xl font-bold text-midnight-violet-900">
           Sessio
         </span>
 

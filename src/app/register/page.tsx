@@ -67,7 +67,7 @@ export default function RegisterPage(): React.ReactNode {
           <p className="mb-2 text-xs font-bold tracking-[2px] text-[#b54eb4]">
             JOIN SESSIO
           </p>
-          <h1 className="font-serif text-3xl font-bold text-[#241426]">
+          <h1 className="font-heading text-3xl font-bold text-[#241426]">
             Create your account
           </h1>
         </div>

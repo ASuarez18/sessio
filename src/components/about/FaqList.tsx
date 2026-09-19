@@ -10,14 +10,12 @@ interface FaqListProps {
 export function FaqList({ faqData }: FaqListProps): React.ReactNode {
   const sectionTitle = faqData?.title || "Frequently asked questions";
   const faqItems =
-    faqData?.items && faqData.items.length > 0
-      ? faqData.items
-      : FALLBACK_FAQS;
+    faqData?.items && faqData.items.length > 0 ? faqData.items : FALLBACK_FAQS;
 
   return (
     <section className="bg-midnight-violet-50">
       <div className="mx-auto max-w-4xl px-6 pb-16">
-        <h2 className="font-serif text-3xl font-bold text-midnight-violet-900">
+        <h2 className="font-heading text-3xl font-bold text-midnight-violet-900">
           {sectionTitle}
         </h2>
         <div className="mt-8 flex flex-col gap-4">

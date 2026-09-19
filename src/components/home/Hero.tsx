@@ -24,7 +24,10 @@ const ALL_CATEGORIES = [
   "Cloud & DevOps",
 ];
 
-export function Hero({ heroData, categoryHighlights = [] }: HeroProps): React.ReactNode {
+export function Hero({
+  heroData,
+  categoryHighlights = [],
+}: HeroProps): React.ReactNode {
   const badgeText = heroData?.subtitle || "WORKSHOPS & TRAINING";
   const title = heroData?.title || "Find your next session";
   const subtitle =
@@ -38,16 +41,15 @@ export function Hero({ heroData, categoryHighlights = [] }: HeroProps): React.Re
   const secondaryCtaText = heroData?.ctaSecondaryText || "Create account";
   const secondaryCtaLink = heroData?.ctaSecondaryLink || "/register";
 
-  const imageUrl =
-    heroData?.image?.fields?.file?.url
-      ? heroData.image.fields.file.url.startsWith("//")
-        ? `https:${heroData.image.fields.file.url}`
-        : heroData.image.fields.file.url
-      : "https://picsum.photos/seed/sessio-hero/1600/900";
+  const imageUrl = heroData?.image?.fields?.file?.url
+    ? heroData.image.fields.file.url.startsWith("//")
+      ? `https:${heroData.image.fields.file.url}`
+      : heroData.image.fields.file.url
+    : "https://picsum.photos/seed/sessio-hero/1600/900";
 
   const activeCategories = ALL_CATEGORIES.map((catName) => {
     const found = categoryHighlights.find(
-      (item) => item.category?.trim().toLowerCase() === catName.toLowerCase()
+      (item) => item.category?.trim().toLowerCase() === catName.toLowerCase(),
     );
     return {
       category: catName,
@@ -83,7 +85,7 @@ export function Hero({ heroData, categoryHighlights = [] }: HeroProps): React.Re
             <p className="text-sm font-semibold uppercase tracking-widest text-midnight-violet-200">
               {badgeText}
             </p>
-            <h1 className="mt-4 font-serif text-5xl font-bold text-white md:text-6xl">
+            <h1 className="mt-4 font-heading text-5xl font-bold text-white md:text-6xl">
               {title}
             </h1>
             <p className="mt-6 max-w-md text-lg text-midnight-violet-100">
@@ -91,9 +93,9 @@ export function Hero({ heroData, categoryHighlights = [] }: HeroProps): React.Re
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Button href={primaryCtaLink}>{primaryCtaText}</Button>
-              <Button href={secondaryCtaLink} variant="outlineLight">
+              {/* <Button href={secondaryCtaLink} variant="outlineLight">
                 {secondaryCtaText}
-              </Button>
+              </Button> */}
             </div>
           </div>
 

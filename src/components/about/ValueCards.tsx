@@ -30,7 +30,7 @@ export function ValueCards({ cards }: ValueCardsProps): React.ReactNode {
               <span className="text-3xl" role="img" aria-label={value.title}>
                 {value.emoji}
               </span>
-              <h2 className="mt-4 font-serif text-xl font-bold text-midnight-violet-900">
+              <h2 className="mt-4 font-heading text-xl font-bold text-midnight-violet-900">
                 {value.title}
               </h2>
               <div className="mt-3 text-midnight-violet-700">

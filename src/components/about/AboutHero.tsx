@@ -17,7 +17,7 @@ export function AboutHero({ aboutData }: AboutHeroProps): React.ReactNode {
         <p className="text-sm font-semibold uppercase tracking-widest text-midnight-violet-300">
           {badgeText}
         </p>
-        <h1 className="mt-4 max-w-2xl font-serif text-5xl font-bold text-white md:text-6xl">
+        <h1 className="mt-4 max-w-2xl font-heading text-5xl font-bold text-white md:text-6xl">
           {title}
         </h1>
         <p className="mt-6 max-w-xl text-lg text-midnight-violet-200">

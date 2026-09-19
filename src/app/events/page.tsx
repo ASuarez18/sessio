@@ -38,7 +38,7 @@ async function getSessions(): Promise<Session[]> {
         spotsLeft,
         imageUrl: event.imageUrl ?? "https://picsum.photos/seed/event/800/600",
       };
-    })
+    }),
   );
 }
 
@@ -52,7 +52,7 @@ export default async function EventsPage(): Promise<React.ReactNode> {
           <p className="text-sm font-semibold uppercase tracking-widest text-midnight-violet-500">
             Browse
           </p>
-          <h1 className="mt-2 font-serif text-4xl font-bold text-midnight-violet-900 md:text-5xl">
+          <h1 className="mt-2 font-heading text-4xl font-bold text-midnight-violet-900 md:text-5xl">
             Upcoming sessions
           </h1>
           <div className="mt-8">

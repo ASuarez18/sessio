@@ -66,7 +66,7 @@ export default function LoginPage(): React.ReactNode {
           <p className="mb-2 text-xs font-bold tracking-[2px] text-[#b54eb4]">
             WELCOME BACK
           </p>
-          <h1 className="font-serif text-3xl font-bold text-[#241426]">
+          <h1 className="font-heading text-3xl font-bold text-[#241426]">
             Sign in to Sessio
           </h1>
         </div>

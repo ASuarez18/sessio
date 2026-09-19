@@ -7,12 +7,14 @@ interface FeaturedSessionsProps {
   sessions: Session[];
 }
 
-export function FeaturedSessions({ sessions }: FeaturedSessionsProps): React.ReactNode {
+export function FeaturedSessions({
+  sessions,
+}: FeaturedSessionsProps): React.ReactNode {
   return (
     <section className="bg-midnight-violet-50">
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="flex items-center justify-between">
-          <h2 className="font-serif text-3xl font-bold text-midnight-violet-900">
+          <h2 className="font-heading text-3xl font-bold text-midnight-violet-900">
             Featured sessions
           </h2>
           <Link
@@ -26,7 +28,12 @@ export function FeaturedSessions({ sessions }: FeaturedSessionsProps): React.Rea
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {sessions.length > 0 ? (
             sessions.map((session) => (
-              <SessionCard key={session.id} session={session} showTime pollAvailability />
+              <SessionCard
+                key={session.id}
+                session={session}
+                showTime
+                pollAvailability
+              />
             ))
           ) : (
             <p className="col-span-3 text-center text-midnight-violet-600 py-8">

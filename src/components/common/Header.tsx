@@ -52,11 +52,11 @@ export function Header(): ReactNode {
   };
 
   return (
-    <header className="sticky top-0 relative z-50 border-b border-midnight-violet-100 bg-white">
+    <header className="sticky top-0  z-50 border-b border-midnight-violet-100 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           href="/"
-          className="flex items-center font-serif text-2xl font-bold text-midnight-violet-900"
+          className="flex items-center font-heading text-2xl font-bold text-midnight-violet-900"
         >
           <Image
             src={logo}

@@ -142,7 +142,7 @@ export default function EventDetailClient({ session }: EventDetailClientProps) {
 
               {/* About this session */}
               <div className="mt-8 rounded-2xl border border-[#e5b5e0] bg-white p-8 shadow-sm">
-                <h2 className="font-serif text-2xl font-bold text-midnight-violet-900">
+                <h2 className="font-heading text-2xl font-bold text-midnight-violet-900">
                   About this session
                 </h2>
                 <p className="mt-4 leading-relaxed text-midnight-violet-700">
@@ -193,7 +193,7 @@ export default function EventDetailClient({ session }: EventDetailClientProps) {
                   <Badge>{session.category}</Badge>
                 </span>
 
-                <h1 className="mt-4 font-serif text-3xl font-bold leading-tight text-midnight-violet-900">
+                <h1 className="mt-4 font-heading text-3xl font-bold leading-tight text-midnight-violet-900">
                   {session.title}
                 </h1>
 
