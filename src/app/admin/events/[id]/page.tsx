@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { getEventById } from "../../../../services/event.service";
 import { getEventRegistrations } from "../../../../services/registration.service";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /**
  * Admin Event Detail Page (Server Component)
  */

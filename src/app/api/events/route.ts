@@ -2,6 +2,10 @@ import { NextRequest, NextResponse,  } from "next/server";
 import { getEvents, createEvent } from "../../../services/event.service";
 import { requireAdmin } from "@/lib/permissions";
 import { EVENT_CATEGORIES } from "@/models/Event";
+import { revalidatePath } from "next/cache";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 /**
  * @GET /api/events
@@ -65,6 +69,11 @@ export async function POST(request: NextRequest) {
     }
 
     const newEvent = await createEvent(body);
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/events");
+    revalidatePath(`/admin/events/${newEvent._id}`);
+    revalidatePath("/");
     return NextResponse.json(newEvent, { status: 201 });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Error while creating event";

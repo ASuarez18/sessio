@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAdminUser, getAdminUsers } from '@/services/user.service';
 import bcrypt from 'bcryptjs';
 
+
 /**
  * @GET /api/admin/admin-users
  * @desc Obtain the list of all admin users.

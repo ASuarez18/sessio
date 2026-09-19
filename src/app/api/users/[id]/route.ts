@@ -5,6 +5,9 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /**
  * @PUT /api/users/[id]
  * @desc Updates an existing user by ID.

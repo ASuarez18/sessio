@@ -6,6 +6,9 @@ import { formatDate, formatStatus, formatTime } from "@/lib/format";
 import { getUserUpcomingSessions } from "@/services/registration.service";
 import { UnregisterButton } from "@/components/my-events/UnregisterButton";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function MyEventsPage(): Promise<React.ReactNode> {
   const user = await getCurrentUser();
   if (!user) {

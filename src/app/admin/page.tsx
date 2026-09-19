@@ -1,10 +1,11 @@
-export const dynamic = "force-dynamic";
-
 // app/admin/page.tsx
 import Link from "next/link";
 import { getAllUsers } from "../../services/user.service";
 import { getEvents } from "../../services/event.service";
 import { getEventRegistrations } from "../../services/registration.service";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 /**
  * Admin Dashboard Page (Server Component)

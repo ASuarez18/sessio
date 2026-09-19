@@ -5,6 +5,7 @@ import { getAdminUsers } from '@/services/user.service';
 import AdminUsersClient from "./admin-users-client";
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface RawAdminUser {
     _id?: { toString(): string } | string;
@@ -13,6 +14,7 @@ interface RawAdminUser {
     username?: string;
     role?: string;
 }
+
 
 export default async function AdminUsersPage() {
     let adminUsers: Array<{

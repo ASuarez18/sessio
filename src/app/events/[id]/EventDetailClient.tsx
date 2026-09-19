@@ -21,6 +21,9 @@ interface EventDetailClientProps {
   session: EventDetailData;
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function EventDetailClient({ session }: EventDetailClientProps) {
   const { user, isLoading } = useAuth();
 
@@ -48,7 +51,7 @@ export default function EventDetailClient({ session }: EventDetailClientProps) {
       }
 
       try {
-        const res = await fetch("/api/registrations/me");
+        const res = await fetch("/api/registrations/me", { cache: "no-store" });
         if (res.ok && isMounted) {
           const data = await res.json();
           const isUserRegistered = data.registrations?.some(
@@ -77,6 +80,7 @@ export default function EventDetailClient({ session }: EventDetailClientProps) {
     try {
       const res = await fetch(`/api/registrations/${session.id}`, {
         method: "POST",
+        cache: "no-store",
       });
 
       if (res.ok) {
@@ -98,6 +102,7 @@ export default function EventDetailClient({ session }: EventDetailClientProps) {
     try {
       const res = await fetch(`/api/registrations/${session.id}`, {
         method: "DELETE",
+        cache: "no-store",
       });
 
       if (res.ok) {

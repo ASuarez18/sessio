@@ -8,6 +8,11 @@ import { connectDB } from "../../../../lib/mongodb";
 import mongoose from "mongoose";
 import { getCurrentUser } from "@/lib/auth";
 import { requireAdmin } from "@/lib/permissions";
+import { revalidatePath } from "next/cache";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -105,6 +110,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         { status: 404 }
       );
     }
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/events");
+    revalidatePath(`/admin/events/${updatedEvent._id}`);
+    revalidatePath("/");
 
     return NextResponse.json(updatedEvent, { status: 200 });
   } catch (error: unknown) {

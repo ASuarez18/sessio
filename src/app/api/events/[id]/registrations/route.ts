@@ -3,6 +3,9 @@ import { getEventRegistrations } from "@/services/registration.service";
 import mongoose from "mongoose";
 import { requireAdmin } from "@/lib/permissions";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface RouteParams {
   params: Promise<{ id: string }>;
 }

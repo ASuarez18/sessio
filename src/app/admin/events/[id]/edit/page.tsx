@@ -5,6 +5,9 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /**
  * Edit Event Page (Client Component)
  * Fetches existing event data, populates the form, and handles updates.
@@ -36,7 +39,7 @@ export default function EditEventPage() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`/api/events/${eventId}`);
+        const res = await fetch(`/api/events/${eventId}`, { cache: "no-store" });
         if (!res.ok) throw new Error("Failed to fetch event details");
 
         const data = await res.json();
@@ -105,6 +108,7 @@ export default function EditEventPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        cache: "no-store",
       });
 
       if (!res.ok) {
@@ -129,6 +133,7 @@ export default function EditEventPage() {
     try {
       const res = await fetch(`/api/events/${eventId}`, {
         method: "DELETE",
+        cache: "no-store",
       });
 
       if (!res.ok) {

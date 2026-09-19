@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAllUsers, getAdminUsers, createAdminUser } from '@/services/user.service';
 import bcrypt from 'bcryptjs';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 /**
  * @GET /api/users
  * @desc Obtains a list of users, filtering by role query parameter if provided.

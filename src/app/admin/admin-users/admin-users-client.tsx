@@ -51,6 +51,7 @@ export default function AdminUsersClient({ initialUsers, currentUserId }: AdminU
         try {
             const res = await fetch(`/api/admin/admin-users/${id}`, {
                 method: 'DELETE',
+                cache: "no-store",
             });
 
             if (!res.ok) {

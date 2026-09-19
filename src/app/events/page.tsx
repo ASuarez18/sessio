@@ -5,6 +5,9 @@ import { formatDate, formatTime } from "@/lib/format";
 import Event from "@/models/Event";
 import Registration from "@/models/Registration";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function getSessions(): Promise<Session[]> {
   await connectDB();
   const events = await Event.find({}).sort({ startAt: 1 }).lean();
