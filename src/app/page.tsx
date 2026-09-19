@@ -3,7 +3,6 @@ import Event from "@/models/Event";
 import Registration from "@/models/Registration";
 import { getHomeHero, getFaqSection } from "@/lib/contenful";
 
-import { Footer } from "@/components/common/Footer";
 import { Hero } from "@/components/home/Hero";
 import { FeaturedSessions } from "@/components/home/FeaturedSessions";
 import { FaqTeaser } from "@/components/home/FaqTeaser";
@@ -78,7 +77,6 @@ export default async function HomePage(): Promise<React.ReactNode> {
         <FeaturedSessions sessions={featuredSessions} />
         <FaqTeaser faqData={faqData} />
       </main>
-      <Footer />
     </>
   );
 }

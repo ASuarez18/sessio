@@ -7,7 +7,6 @@ import {
   type AboutPageFields,
 } from "@/lib/contenful";
 
-import { Footer } from "@/components/common/Footer";
 import { AboutHero } from "@/components/about/AboutHero";
 import { ValueCards } from "@/components/about/ValueCards";
 import { FaqList } from "@/components/about/FaqList";
@@ -46,7 +45,6 @@ export default async function AboutPage(): Promise<React.ReactNode> {
         <FaqList faqData={faqData} />
         <CtaBand bannerData={homeBanner} aboutData={aboutData} />
       </main>
-      <Footer />
     </>
   );
 }

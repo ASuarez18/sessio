@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Header } from "@/components/common/Header";
 import "./globals.css";
 import { AuthProvider } from "./context/AuthContext";
+import { Footer } from "@/components/common/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           <main className="flex-1">{children}</main>
+          <Footer />
         </AuthProvider>
       </body>
     </html>

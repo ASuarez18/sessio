@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDate, formatStatus, formatTime } from "@/lib/format";
 import { getUserUpcomingSessions } from "@/services/registration.service";
-import { Footer } from "@/components/common/Footer";
 import { UnregisterButton } from "@/components/my-events/UnregisterButton";
 
 export default async function MyEventsPage(): Promise<React.ReactNode> {
@@ -94,7 +93,6 @@ export default async function MyEventsPage(): Promise<React.ReactNode> {
         </div>
       </div>
       </section>
-      <Footer />
     </div>
   );
 }

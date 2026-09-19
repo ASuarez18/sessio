@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { Badge } from "@/components/ui/Badge";
-import { Footer } from "@/components/common/Footer";
 import type { EventDetailData } from "./page";
 
 interface EventDetailClientProps {
@@ -317,7 +316,6 @@ export default function EventDetailClient({ session }: EventDetailClientProps) {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }

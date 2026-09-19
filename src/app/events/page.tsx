@@ -1,4 +1,3 @@
-import { Footer } from "@/components/common/Footer";
 import { SessionBrowser } from "@/components/events/SessionBrowser";
 import { Session, SessionCategory } from "@/types/session";
 import { connectDB } from "@/lib/mongodb";
@@ -61,7 +60,6 @@ export default async function EventsPage(): Promise<React.ReactNode> {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }
