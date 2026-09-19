@@ -85,9 +85,10 @@ body {
   font-family: var(--font-sans);
 }
 
-input {
+input, select, textarea {
   color: #151e1c;
 }
+
 
 button {
   cursor: pointer;

@@ -7,7 +7,7 @@ import User from "@/models/User";
  * @returns {Promise<Array>} An array of user objects (excluding password hashes).
  */
 export async function getAllUsers() {
-    try {
+    try {   
         await connectDB();
 
         const users = await User.find({ role: { $ne: "admin" } }).select("-passHash").lean();
