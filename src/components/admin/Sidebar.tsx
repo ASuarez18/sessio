@@ -2,19 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Users, LayoutDashboard, LogOut } from "lucide-react";
+import { Calendar, Users, UserCheck, LayoutDashboard, LogOut } from "lucide-react";
 
 const NAVIGATION_ITEMS = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Events", href: "/admin/events", icon: Calendar },
-  { name: "Admin Users", href: "/admin/admin-users", icon: Users },
+  { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Admin Users", href: "/admin/admin-users", icon: UserCheck },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-16 left-0 w-64 shrink-0 border-r border-gray-200 bg-whiteh-[calc(100vh-4rem)] flex flex-col justify-between p-4 overflow-y-auto">
+    <aside className="w-64 shrink-0 h-screen border-r border-gray-200 bg-white flex flex-col justify-between p-4 z-20">
       <div>
         {/* Brand Header */}
         <div className="px-3 py-4 mb-6 border-b border-gray-100">
